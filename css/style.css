@@ -1,0 +1,107 @@
+/* Global styles */
+body {
+  background: url('img/mochaGrunge.png');
+
+  font-family: 'Tauri', Verdana;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  
+  cursor: default;
+}
+h1 {
+  font-family: 'Tauri', 'Libre Baskerville', serif;
+  font-size: 36pt;
+  margin: 20px;
+  text-shadow: 0 1px DarkGray;
+}
+#holder {
+  width: 800px;
+  margin: 0 auto;
+}
+
+/* Supplemental UI styles */
+#buttons {
+  margin: 30px auto;
+  text-align: center;
+}
+#buttons a {
+  font-size: 16pt;
+  text-decoration: none;
+  color: white;
+  border-radius: 6px;
+  margin: 2px 10px;
+  padding: 7px 30px;
+  background-color: #5BB75B;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+#turn {
+  font-size: 16pt;
+}
+#credits {
+  text-align: center;
+}
+.divider {
+  font-size: 20px;
+}
+
+/* Board Styles */
+#board {
+  width: 650px;
+  height: 650px;
+  border: 1px solid black;
+  margin: 0 auto;
+  background: url('img/board_graphics.png');
+}
+#board > div {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  float: left;
+}
+#board > div.right {
+  margin-right: 0;
+}
+#board > div.corner {
+  background: url('img/corner.png');
+}
+#board > div.center {
+  background: url('img/center.png');
+}
+#board > div.white {
+  background: url('img/white.png');
+}
+#board > div.black {
+  background: url('img/black.png');
+}
+#board > div.queen {
+  background: url('img/queen.png');
+}
+
+/* jQuery UI Overrides */
+.ui-dialog {
+  display: none;
+}
+.no-close .ui-dialog-titlebar-close {
+  display: none;
+}
+.ui-widget-overlay {
+  background: white;
+}
+
+/* Intro.js Overrides */
+.introjs-tooltip {
+  min-width: 600px;
+}
+.introjs-tooltiptext {
+  font-family: 'Tauri', Verdana;
+}
+.introjs-helperLayer {
+  background: url('img/mochaGrunge.png');
+}
