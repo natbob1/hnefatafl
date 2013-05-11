@@ -47,6 +47,5 @@ function initialGameSetup() {
 function resetGame () {
   localStorage.clear();
 
-  initialGameSetup();
-  mainGame.hardUpdateView();
+  mainGame.reset();
 }

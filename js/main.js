@@ -374,6 +374,14 @@ function Game (boardElement, turnDisplayElement, doneCallback) {
 		}
 	}
 
+	this.reset = function () {
+		this.whiteMove = true;
+		this.winner = null;
+		
+		this.board.setupPieces();
+		this.hardUpdateView();
+	}
+
 	this.moveIsValid = function (move) {
 		return ((move.piece.color === "white") === this.whiteMove) && this.board.canMoveTo(move.piece, move.endLocation);
 	}
