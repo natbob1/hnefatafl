@@ -78,17 +78,11 @@ function Point (x, y) {
 	}
 
 	this.isEdge = function () {
-		if (this.adjacentPoints().length <= 3) {
-			return true;
-		}
-		return false;
+		return this.adjacentPoints().length <= 3;
 	}
 
 	this.isCorner = function () {
-		if (this.adjacentPoints().length === 2) {
-			return true;
-		}
-		return false;
+		return this.adjacentPoints().length === 2
 	}
 
 	this.isCenter = function () {
@@ -96,10 +90,7 @@ function Point (x, y) {
 	}
 
 	this.isEqual = function (otherPoint) {
-		if (this.x === otherPoint.x && this.y === otherPoint.y) {
-			return true;
-		}
-		return false;
+		return (this.x === otherPoint.x) && (this.y === otherPoint.y)
 	}
 }
 
@@ -377,7 +368,7 @@ function Game (boardElement, turnDisplayElement, doneCallback) {
 	this.reset = function () {
 		this.whiteMove = true;
 		this.winner = null;
-		
+
 		this.board.setupPieces();
 		this.hardUpdateView();
 	}
