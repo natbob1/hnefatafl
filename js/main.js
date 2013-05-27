@@ -216,7 +216,7 @@ function Board () {
 			}
 			else {
 				for (var i in adj) {
-					if ((this.pieceAt(adj[i]) && this.pieceAt(adj[i]).color !== piece.color) || adj[i].isCorner() || adj[i].isCenter()) {
+					if ( ( this.pieceAt(adj[i]) && this.pieceAt(adj[i]).color !== piece.color ) || adj[i].isCorner() || adj[i].isCenter() ) {
 						continue;
 					}
 					else {
@@ -374,7 +374,7 @@ function Game (boardElement, turnDisplayElement, doneCallback) {
 	}
 
 	this.moveIsValid = function (move) {
-		return ((move.piece.color === "white") === this.whiteMove) && this.board.canMoveTo(move.piece, move.endLocation);
+		return ( (move.piece.color === "white") === this.whiteMove ) && this.board.canMoveTo(move.piece, move.endLocation);
 	}
 
 	this.executeMove = function (move) {

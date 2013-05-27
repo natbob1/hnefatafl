@@ -25,7 +25,7 @@ function setupClickCallbacks() {
           return false;
         }
 
-        var move = new Move(clickedPiece, newLocation);
+        var move = new Move(clickedPiece, newLocation); //***MOVE CREATED***
 
         if (!mainGame.tryMove(move)) {
           invalidMoveDialog("That move isn't allowed!");
