@@ -265,9 +265,10 @@ function Board () {
 	this.setupPieces();
 }
 
-function Display(board, boardElement, turnElement) {
+function Display(board, boardElement, turnElement, turnCountElement) {
 	this.element = boardElement;
-	this.turnDisplayElement = turnElement;
+	this.playerTurnDisplayElement = turnElement;
+	this.turnCountDisplayElement = turnCountElement;
 	this.board = board;
 	this.clickedPiece = null;
 
@@ -377,20 +378,25 @@ function Display(board, boardElement, turnElement) {
 	}
 
 	this.updateTurnDisplay = function (displayText) {
-		$(this.turnDisplayElement).html(displayText);
+		$(this.playerTurnDisplayElement).html(displayText);
+	}
+
+	this.updateTurnCountDisplay = function (count) {
+		$(this.turnCountDisplayElement).html("Turn #" + count);
 	}
 
 	this.setupDisplay();
 }
 
-function Game (boardElement, turnDisplayElement, doneCallback) {
+function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, doneCallback) {
 	this.done = doneCallback;
 	this.board = new Board();
-	this.display = new Display(this.board, boardElement, turnDisplayElement);
+	this.display = new Display(this.board, boardElement, playerTurnDisplayElement, turnCountDisplayElement);
 	this.whitePlayer = new HumanPlayer("white");
 	this.blackPlayer = new HumanPlayer("black");
 	this.winner = null;
 	this.whiteMove = true;
+	this.turnCount = 1;
 
 	this.tick = function () {
 		this.board.checkForTakenPieces();
@@ -412,6 +418,7 @@ function Game (boardElement, turnDisplayElement, doneCallback) {
 	this.reset = function () {
 		this.whiteMove = true;
 		this.winner = null;
+		this.turnCount = 1
 
 		this.board.setupPieces();
 		this.hardUpdateView();
@@ -432,6 +439,8 @@ function Game (boardElement, turnDisplayElement, doneCallback) {
 		move.piece.lastMovedPiece = true;
 
 		this.whiteMove = !this.whiteMove;
+
+		this.turnCount++;
 	}
 
 	this.updateTurnDisplay = function () {
@@ -443,9 +452,14 @@ function Game (boardElement, turnDisplayElement, doneCallback) {
 		}
 	}
 
+	this.updateTurnCountDisplay = function () {
+		this.display.updateTurnCountDisplay(this.turnCount);
+	}
+
 	this.hardUpdateView = function () {
 		this.display.update();
 		this.updateTurnDisplay();
+		this.updateTurnCountDisplay();
 	}
 
 	this.tryMove = function (move) {

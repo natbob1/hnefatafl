@@ -17,6 +17,7 @@ function saveGame(game) {
   localStorage['Hnefatafl.numPieces'] = i;
 
   localStorage['Hnefatafl.whiteMove'] = game.whiteMove;
+  localStorage['Hnefatafl.turnCount'] = game.turnCount;
 
   return true;
 }
@@ -27,6 +28,7 @@ function loadGame(game) {
   }
 
   game.whiteMove = localStorage['Hnefatafl.whiteMove'] == "true";
+  game.turnCount = parseInt(localStorage['Hnefatafl.turnCount']);
 
   game.board.pieces = new Array();
 
@@ -38,7 +40,7 @@ function loadGame(game) {
 }
 
 function initialGameSetup() {
-  mainGame = new Game($("#board")[0], $("#turn")[0], doneDialog);
+  mainGame = new Game($("#board")[0], $("#playerTurn")[0], $("#turnCount")[0], doneDialog);
 
   setupClickCallbacks();
   setupIntro();
