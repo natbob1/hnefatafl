@@ -299,6 +299,7 @@ function Display(board, boardElement, turnElement) {
 		var squares = $(this.element).children();
 		var ins = [];
 		var outs = [];
+		var crosses = [];
 
 		for (var i = 0; i < squares.length; i++) {
 			var view = this.pieceAtElement(squares[i]);
@@ -309,6 +310,11 @@ function Display(board, boardElement, turnElement) {
 			}
 			else if (!model && view) {
 				outs.push(this.pointAtElement(squares[i]));
+			}
+			else if (model && view) {
+				if ($(squares[i]).attr('class').split(/\s+/).indexOf(this.classForPiece(model)) == -1) {
+					crosses.push(this.pointAtElement(squares[i]));
+				}
 			}
 		}
 
@@ -329,6 +335,16 @@ function Display(board, boardElement, turnElement) {
 
 				$(elem).fadeIn(400);
 			})(this.elementAtPoint(ins[i]), this.classForPiece(this.board.pieceAt(ins[i])));
+		}
+
+		for (var i = 0; i < crosses.length; i++) {
+			(function(elem, _class) {
+				$(elem).fadeOut(200, function () {
+					$(elem).removeClass("white black queen"); //UPDATE
+					$(elem).addClass(_class);
+					$(elem).fadeIn(200);
+				});
+			})(this.elementAtPoint(crosses[i]), this.classForPiece(this.board.pieceAt(crosses[i])));
 		}
 	}
 
