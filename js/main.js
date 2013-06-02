@@ -269,6 +269,7 @@ function Display(board, boardElement, turnElement) {
 	this.element = boardElement;
 	this.turnDisplayElement = turnElement;
 	this.board = board;
+	this.clickedPiece = null;
 
 	this.classForPiece = function (piece) {
 		if (piece.color === "white") {
