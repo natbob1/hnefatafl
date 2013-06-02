@@ -4,13 +4,15 @@ function setupClickCallbacks() {
   $("#board div").on("click", function () {
 
     if (!mainGame.display.clickedPiece) {
+      mainGame.display.clickedPiece = mainGame.board.pieceAt(mainGame.display.pointAtElement(this));
+
+
       if (!(mainGame.display.clickedPiece.color === "white") === mainGame.whiteMove) {
+        mainGame.display.clickedPiece = null;
         invalidMoveDialog("That's not your piece!");
         return false;
       }
 
-      mainGame.display.clickedPiece = mainGame.board.pieceAt(mainGame.display.pointAtElement(this));
-      
     }
     else {
       var newLocation = mainGame.display.pointAtElement(this);
