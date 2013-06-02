@@ -83,6 +83,9 @@ h1 {
 #board > div.queen {
   background: url('img/queen.png');
 }
+#board > div.possibleMove {
+  background: url("img/move.png");
+}
 
 /* jQuery UI Overrides */
 .ui-dialog {

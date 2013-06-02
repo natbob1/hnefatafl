@@ -362,6 +362,18 @@ function Display(board, boardElement, turnElement) {
 				});
 			})(this.elementAtPoint(crosses[i]), this.classForPiece(this.board.pieceAt(crosses[i])));
 		}
+
+		$(squares).removeClass("possibleMove");
+		if (this.clickedPiece) {
+			var moveLocs = this.board.allValidMoveLocations(this.clickedPiece);
+			for (var i = 0; i < moveLocs.length; i++) {
+				(function(elem) {
+					$(elem).hide();
+					$(elem).addClass("possibleMove");
+					$(elem).fadeIn(200);
+				})(this.elementAtPoint(moveLocs[i]));
+			}
+		}
 	}
 
 	this.updateTurnDisplay = function (displayText) {

@@ -6,13 +6,13 @@ function setupClickCallbacks() {
     if (!mainGame.display.clickedPiece) {
       mainGame.display.clickedPiece = mainGame.board.pieceAt(mainGame.display.pointAtElement(this));
 
-
       if (!(mainGame.display.clickedPiece.color === "white") === mainGame.whiteMove) {
         mainGame.display.clickedPiece = null;
         invalidMoveDialog("That's not your piece!");
         return false;
       }
 
+      mainGame.display.update();
     }
     else {
       var newLocation = mainGame.display.pointAtElement(this);
@@ -20,10 +20,12 @@ function setupClickCallbacks() {
       if (newLocation) {
         if(mainGame.display.clickedPiece.location.isEqual(newLocation)) {
           mainGame.display.clickedPiece = null;
+          mainGame.display.update();
           return false;
         }
         else if (mainGame.board.pieceAt(newLocation) && mainGame.board.pieceAt(newLocation).color == mainGame.display.clickedPiece.color) {
           mainGame.display.clickedPiece = mainGame.board.pieceAt(newLocation);
+          mainGame.display.update();
           return false;
         }
 
@@ -33,13 +35,11 @@ function setupClickCallbacks() {
           invalidMoveDialog("That move isn't allowed!");
           return false;
         }
-        else {
-          mainGame.tick();
-          saveGame(mainGame);
-        }
       }
 
       mainGame.display.clickedPiece = null;
+      mainGame.tick();
+      saveGame(mainGame);
     }
   });
 }
