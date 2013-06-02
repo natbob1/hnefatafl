@@ -168,6 +168,21 @@ function Board () {
 		return true;
 	}
 
+	this.allValidMoveLocations = function(piece) {
+		var points = [];
+		for (var i = 0; i < 11; i++) {
+			for (var j = 0; j < 11; j++) {
+				var pt = new Point(i, j);
+
+				if (this.canMoveTo(piece, pt)) {
+					points.push(pt);
+				}
+			}
+		}
+
+		return points;
+	}
+
 	this.checkForTakenPieces = function () {
 		for (var i in this.pieces) {
 			if (this.isPieceTaken(this.pieces[i])) {
