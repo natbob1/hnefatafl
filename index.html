@@ -17,29 +17,48 @@
     <script type="text/javascript" src="js/localStorage.js"></script>
     <script type="text/javascript" src="js/clickCallbacks.js"></script>
     <script type="text/javascript" src="js/setupIntro.js"></script>
+    <script type="text/javascript" src="js/simpleModal.js"></script>
 
     <link href="css/style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <div id="holder">
-      <h1>Hnefatafl</h1>
       <div id="board">
       </div>
-      <div id="buttons">
+      <div class="buttons">
         <a id="newGameButton">New Game</a>
-        <a id="instructionsButton">Instructions</a>
         <span id="playerTurn"></span>
         <span id="turnCount"></span>
       </div>
       <div id="credits">Coding &amp; Design: Nathan Nieman <span class="divider">|</span> Graphics: Kent Trehearne </div>
     </div>
 
+    <div id="splash">
+      <h2>Welcome to</h2>
+      <h1>Hnefatafl</h1>
+      <div class="buttons">
+        <a class="splashClose">New Game</a>
+        <a class="splashClose" id="instructionsButton">Instructions</a>
+      </div>
+    </div>
     <div id="done-dialog" class="ui-dialog" title="Game Over!">
       <p id="winText"></p>
     </div>
     <div id="invalid-dialog" class="ui-dialog" title="Oops.">
       <p id="invalid-message"></p>
     </div>
+    <audio autoplay loop>
+      <source src="audio/Acrostics.ogg" type="audio/ogg">
+      <source src="audio/Acrostics.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="takenEffect" preload="auto">
+      <source src="audio/taken.ogg" type="audio/ogg">
+      <source src="audio/taken.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="victoryEffect" preload="auto">
+      <source src="audio/victory.ogg" type="audio/ogg">
+      <source src="audio/victory.mp3" type="audio/mpeg">
+    </audio>
     <script>
       $(document).ready(function () {
         initialGameSetup();
@@ -49,6 +68,9 @@
         $("#instructionsButton").click(function() {introJs().start();});
 
         mainGame.hardUpdateView();
+
+        modal.open({content: $("#splash")});
+        $(".splashClose").click(modal.close);
       });
     </script>
   </body>

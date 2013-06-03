@@ -184,11 +184,16 @@ function Board () {
 	}
 
 	this.checkForTakenPieces = function () {
+		var count = 0;
+
 		for (var i in this.pieces) {
 			if (this.isPieceTaken(this.pieces[i])) {
 				this.removePiece(this.pieces[i]);
+				count++;
 			}
 		}
+
+		return count;
 	}
 
 	this.checkForVictory = function() {
@@ -388,10 +393,21 @@ function Display(board, boardElement, turnElement, turnCountElement) {
 	this.setupDisplay();
 }
 
+function Sound () {
+	this.victory = function () {
+		$("#victoryEffect")[0].play();
+	}
+
+	this.pieceTaken = function () {
+		$("#takenEffect")[0].play();
+	}
+}
+
 function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, doneCallback) {
 	this.done = doneCallback;
 	this.board = new Board();
 	this.display = new Display(this.board, boardElement, playerTurnDisplayElement, turnCountDisplayElement);
+	this.sound = new Sound();
 	this.whitePlayer = new HumanPlayer("white");
 	this.blackPlayer = new HumanPlayer("black");
 	this.winner = null;
@@ -399,7 +415,9 @@ function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, 
 	this.turnCount = 1;
 
 	this.tick = function () {
-		this.board.checkForTakenPieces();
+		if (this.board.checkForTakenPieces() > 0) {
+			this.sound.pieceTaken();
+		}
 
 		this.hardUpdateView();
 
@@ -410,6 +428,8 @@ function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, 
 			else {
 				this.winner = this.blackPlayer;
 			}
+
+			this.sound.victory();
 			
 			this.done(this);
 		}
