@@ -17,6 +17,7 @@ body {
   height: 100%;
   width: 100%;
   position: absolute;
+  overflow: hidden;
 }
 h1 {
   font-family: 'Tauri', 'Libre Baskerville', serif;

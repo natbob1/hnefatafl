@@ -37,7 +37,7 @@
       <h2>Welcome to</h2>
       <h1>Hnefatafl</h1>
       <div class="buttons">
-        <a class="splashClose">Play Game</a>
+        <a class="splashClose" id="playGameButton">Play Game</a>
         <a class="splashClose" id="instructionsButton">Instructions</a>
       </div>
     </div>
@@ -62,12 +62,24 @@
     <script>
       $(document).ready(function () {
         initialGameSetup();
-        loadGame(mainGame);
+        mainGame.hardUpdateView();
+
+        var intro = introJs();
+        var introCallback = function() {
+          loadGame(mainGame);
+          mainGame.hardUpdateView();
+        }
+        
+        intro.onexit(introCallback);
+        intro.oncomplete(introCallback);
+
+        $("#playGameButton").click(function() {
+          loadGame(mainGame);
+          mainGame.hardUpdateView();
+        });
 
         $("#newGameButton").click(resetGame);
-        $("#instructionsButton").click(function() {introJs().start();});
-
-        mainGame.hardUpdateView();
+        $("#instructionsButton").click(function() {intro.start();});
 
         modal.open({content: $("#splash")});
         $(".splashClose").click(modal.close);
