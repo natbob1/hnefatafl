@@ -184,13 +184,18 @@ function Board () {
 	}
 
 	this.checkForTakenPieces = function () {
-		var count = 0;
+		var removes = [];
 
 		for (var i in this.pieces) {
 			if (this.isPieceTaken(this.pieces[i])) {
-				this.removePiece(this.pieces[i]);
-				count++;
+				removes.push(this.pieces[i]);
 			}
+		}
+
+		var count = 0;
+		for (var i in removes) {
+			this.removePiece(removes[i]);
+			count++;
 		}
 
 		return count;
@@ -214,6 +219,8 @@ function Board () {
 	this.isPieceTaken = function (piece) {
 		var adj = piece.location.adjacentPoints();
 
+		//if (piece.id == 25) {debugger;}
+
 		if (!piece.lastMovedPiece) {
 			if (!piece.isQueen) {
 				for (var i in adj) {
@@ -226,9 +233,6 @@ function Board () {
 						else if ( ( this.pieceAt(op) && (this.pieceAt(op).color !== piece.color) ) || op.isCorner() || ( (piece.color === "black") && op.isCenter() ) || ( (piece.color === "white") && op.isCenter() && !this.pieceAt(op) ) ) {
 							//alert(this.pieceAt(op).color + " != " + piece.color);
 							return true;
-						}
-						else {
-							continue;
 						}
 					}
 
