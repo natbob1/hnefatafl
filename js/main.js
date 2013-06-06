@@ -223,7 +223,7 @@ function Board () {
 						if (op === false) {
 							continue;
 						}
-						else if ((this.pieceAt(op) && this.pieceAt(op).color !== piece.color) || op.isCorner()) {
+						else if ( ( this.pieceAt(op) && (this.pieceAt(op).color !== piece.color) ) || op.isCorner() || ( (piece.color === "black") && op.isCenter() ) || ( (piece.color === "white") && op.isCenter() && !this.pieceAt(op) ) ) {
 							//alert(this.pieceAt(op).color + " != " + piece.color);
 							return true;
 						}
