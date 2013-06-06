@@ -229,7 +229,6 @@ function Board () {
 							continue;
 						}
 						else if ( ( this.pieceAt(op) && (this.pieceAt(op).color !== piece.color) ) || op.isCorner() || ( (piece.color === "black") && op.isCenter() ) || ( (piece.color === "white") && op.isCenter() && !this.pieceAt(op) ) ) {
-							//alert(this.pieceAt(op).color + " != " + piece.color);
 							return true;
 						}
 					}
@@ -345,7 +344,7 @@ function Display(board, boardElement, turnElement, turnCountElement) {
 		for (var i = 0; i < outs.length; i++) {
 			(function(elem) {
 				$(elem).fadeOut(400, function () {
-					$(elem).removeClass("white black queen"); //UPDATE
+					$(elem).removeClass("white black queen");
 					$(elem).show();
 				});
 			})(this.elementAtPoint(outs[i]));
@@ -364,7 +363,7 @@ function Display(board, boardElement, turnElement, turnCountElement) {
 		for (var i = 0; i < crosses.length; i++) {
 			(function(elem, _class) {
 				$(elem).fadeOut(200, function () {
-					$(elem).removeClass("white black queen"); //UPDATE
+					$(elem).removeClass("white black queen");
 					$(elem).addClass(_class);
 					$(elem).fadeIn(200);
 				});
