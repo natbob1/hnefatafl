@@ -219,8 +219,6 @@ function Board () {
 	this.isPieceTaken = function (piece) {
 		var adj = piece.location.adjacentPoints();
 
-		//if (piece.id == 25) {debugger;}
-
 		if (!piece.lastMovedPiece) {
 			if (!piece.isQueen) {
 				for (var i in adj) {
