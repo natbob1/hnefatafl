@@ -406,7 +406,8 @@ function Sound () {
 	};
 }
 
-function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, doneCallback) {
+function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, gameId,  doneCallback) {
+    this.gameId = gameId;
 	this.done = doneCallback;
 	this.board = new Board();
 	this.display = new Display(this.board, boardElement, playerTurnDisplayElement, turnCountDisplayElement);
@@ -420,7 +421,7 @@ function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, 
 
 	this.tick = function () {
 		if (this.board.checkForTakenPieces().length > 0) {
-			this.board.removePieces(this.board.checkForTakenPieces())
+			this.board.removePieces(this.board.checkForTakenPieces());
             this.sound.pieceTaken();
 		}
 
@@ -462,28 +463,39 @@ function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, 
 		this.whiteMove = !this.whiteMove;
 
 		this.turnCount++;
+
+        if (this.gameId) {
+            //TODO: SEND MOVE TO SERVER AND RETURN TRUE IF IT WORKED
+        }
 	};
 
     this.tryMove = function (move) {
 		if (this.moveIsValid(move)) {
-			this.executeMove(move);
-			return true;
+			return this.executeMove(move);
 		}
 
 		return false;
 	};
 
 	this.updateView = function () {
-        //TODO: GET NEW DATA FROM SERVER
+        var update = function () {
+            this.display.update();
+            this.display.updateTurnCountDisplay(this.turnCount);
 
-		this.display.update();
-        this.display.updateTurnCountDisplay(this.turnCount);
+            if (this.whiteMove) {
+                this.display.updateTurnDisplay("White's Move");
+            }
+            else {
+                this.display.updateTurnDisplay("Black's Move");
+            }
+        };
 
-		if (this.whiteMove) {
-			this.display.updateTurnDisplay("White's Move");
-		}
-		else {
-			this.display.updateTurnDisplay("Black's Move");
-		}
+        if (this.gameId) {
+            //TODO: GET NEW DATA FROM SERVER AND UPDATE
+        }
+        else {
+            update();
+        }
+
 	};
 }

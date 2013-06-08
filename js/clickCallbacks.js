@@ -8,6 +8,8 @@ function setupClickCallbacks() {
 
       if (!(mainGame.display.clickedPiece.color === "white") === mainGame.whiteMove) {
         mainGame.display.clickedPiece = null;
+
+        //TODO: SAY IT'S NOT YOUR TURN IF IT IS A NETWORK GAME
         invalidMoveDialog("That's not your piece!");
         return false;
       }
