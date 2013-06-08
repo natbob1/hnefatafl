@@ -5,6 +5,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
     <script type="text/javascript" src="js/libs/intro.js"></script>
+    <script type="text/javascript" src="js/libs/jquery.simplemodal.1.4.4.min.js"></script>
 
     <link href='http://fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css' />
     <link href='http://fonts.googleapis.com/css?family=Tauri' rel='stylesheet' type='text/css'>
@@ -31,7 +32,7 @@
       <div id="credits">Coding &amp; Design: Nathan Nieman <span class="divider">|</span> Graphics: Kent Trehearne </div>
     </div>
 
-    <div id="splash" class="hidden">
+    <div id="splash">
       <h2>Welcome to</h2>
       <h1>Hnefatafl</h1>
       <div class="buttons">
@@ -79,8 +80,21 @@
         $("#newGameButton").click(resetGame);
         $("#instructionsButton").click(function() {intro.start();});
 
-        modal.open({content: $("#splash").show()});
-        $(".splashClose").click(modal.close);
+        $("#splash").modal({
+            onOpen: function (dialog) {
+                dialog.overlay.fadeIn();
+                dialog.container.fadeIn();
+                dialog.data.fadeIn();
+            },
+            onClose: function (dialog) {
+                dialog.overlay.fadeOut();
+                dialog.container.fadeOut();
+                dialog.data.fadeIn();
+            },
+            close: false
+        });
+
+        $(".splashClose").click(function() { $.modal.close() });
       });
     </script>
   </body>
