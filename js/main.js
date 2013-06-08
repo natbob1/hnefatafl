@@ -337,7 +337,7 @@ function Display(board, boardElement, turnElement, turnCountElement) {
 				outs.push(this.pointAtElement(squares[i]));
 			}
 			else if (model && view) { //Locations which previously were occupied, but now are occupied with a different type of pieces
-				if ($(squares[i]).hasClass(this.classForPiece(model))) {
+				if (!$(squares[i]).hasClass(this.classForPiece(model))) {
 					crosses.push(this.pointAtElement(squares[i]));
 				}
 			}
@@ -467,6 +467,8 @@ function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, 
         if (this.gameId) {
             //TODO: SEND MOVE TO SERVER AND RETURN TRUE IF IT WORKED
         }
+
+        return true;
 	};
 
     this.tryMove = function (move) {
@@ -478,24 +480,18 @@ function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, 
 	};
 
 	this.updateView = function () {
-        var update = function () {
-            this.display.update();
-            this.display.updateTurnCountDisplay(this.turnCount);
-
-            if (this.whiteMove) {
-                this.display.updateTurnDisplay("White's Move");
-            }
-            else {
-                this.display.updateTurnDisplay("Black's Move");
-            }
-        };
-
         if (this.gameId) {
-            //TODO: GET NEW DATA FROM SERVER AND UPDATE
-        }
-        else {
-            update();
+            //TODO: GET NEW DATA FROM SERVER
         }
 
+		this.display.update();
+        this.display.updateTurnCountDisplay(this.turnCount);
+
+		if (this.whiteMove) {
+			this.display.updateTurnDisplay("White's Move");
+		}
+		else {
+			this.display.updateTurnDisplay("Black's Move");
+		}
 	};
 }

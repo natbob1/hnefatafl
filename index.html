@@ -32,7 +32,7 @@
       <div id="credits">Coding &amp; Design: Nathan Nieman <span class="divider">|</span> Graphics: Kent Trehearne </div>
     </div>
 
-    <div id="splash">
+    <div id="splash" class="hidden">
       <h2>Welcome to</h2>
       <h1>Hnefatafl</h1>
       <div class="buttons">
@@ -80,7 +80,7 @@
         $("#newGameButton").click(resetGame);
         $("#instructionsButton").click(function() {intro.start();});
 
-        modal.open({content: $("#splash")});
+        modal.open({content: $("#splash").show()});
         $(".splashClose").click(modal.close);
       });
     </script>
