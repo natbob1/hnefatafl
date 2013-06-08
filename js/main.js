@@ -473,6 +473,9 @@ function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, 
         if (this.gameId) {
             //TODO: SEND MOVE TO SERVER AND RETURN TRUE IF IT WORKED
         }
+        else {
+            saveGame(mainGame);
+        }
 
         return true;
 	};
