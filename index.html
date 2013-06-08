@@ -82,13 +82,13 @@
         $("#playGameButton").click(introCallback);
         $("#instructionsButton").click(function() {intro.start();});
 
-        $("#newGameButton").click(newGame);
+        $("#newGameButton").click(newGameDialog);
         $("#hotSeatGame").click(resetGame);
         $("#networkGame").click(resetGame);
 
         $(".splashClose").click(function() { $.modal.close() });
 
-        splash();
+        splashDialog();
       });
     </script>
   </body>

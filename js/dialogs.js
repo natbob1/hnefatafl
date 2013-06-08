@@ -1,4 +1,4 @@
-function splash () {
+function splashDialog () {
     $("#splash").modal({
         onOpen: function (dialog) {
             dialog.overlay.fadeIn(400);
@@ -16,7 +16,7 @@ function splash () {
     });
 }
 
-function newGame () {
+function newGameDialog () {
     $("#newGame").modal({
         onOpen: function (dialog) {
             dialog.overlay.fadeIn(400);
