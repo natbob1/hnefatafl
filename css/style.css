@@ -100,8 +100,15 @@ h1 {
 }
 
 /* Modals */
+.hidden {
+    display: none;
+}
+
 #splash {
     width: 430px;
+}
+#newGame {
+    width: 500px;
 }
 
 /* SimpleModal Styles */
