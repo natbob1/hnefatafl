@@ -39,6 +39,7 @@ function setupClickCallbacks() {
 
       mainGame.display.clickedPiece = null;
       mainGame.tick();
+      mainGame.updateView();
       saveGame(mainGame);
       return true;
     }

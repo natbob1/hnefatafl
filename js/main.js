@@ -97,7 +97,6 @@ function Point (x, y) {
 
 function Board () {
 	this.pieces = [];
-	this.removedPieces = [];
 
 	this.pieceAt = function (point) {
         for (var i = 0; i < this.pieces.length; i++) {
@@ -120,7 +119,7 @@ function Board () {
 	this.removePiece = function (piece) {
 		for (var i = 0; i < this.pieces.length; i++) {
 			if (this.pieces[i] == piece) {
-				this.removedPieces.push(this.pieces.splice(i, 1)[0]);
+				this.pieces.splice(i, 1);
 			}
 		}
 	};
@@ -193,14 +192,14 @@ function Board () {
 			}
 		}
 
-		var count = 0;
-		for (var i = 0; i < removes.length; i++) {
-			this.removePiece(removes[i]);
-			count++;
-		}
-
-		return count;
+        return removes;
 	};
+
+    this.removePieces = function (pieces) {
+        for (var i = 0; i < pieces.length; i++) {
+			this.removePiece(pieces[i]);
+		}
+    };
 
 	this.checkForVictory = function() {
 		for (var i = 0; i < this.pieces.length; i++) {
@@ -418,11 +417,10 @@ function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, 
 	this.turnCount = 1;
 
 	this.tick = function () {
-		if (this.board.checkForTakenPieces() > 0) {
-			this.sound.pieceTaken();
+		if (this.board.checkForTakenPieces().length > 0) {
+			this.board.removePieces(this.board.checkForTakenPieces())
+            this.sound.pieceTaken();
 		}
-
-		this.hardUpdateView();
 
 		if (this.board.checkForVictory()) {
 			if (this.board.checkForVictory() === "white") {
@@ -444,7 +442,6 @@ function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, 
 		this.turnCount = 1;
 
 		this.board.setupPieces();
-		this.hardUpdateView();
 	};
 
 	this.moveIsValid = function (move) {
@@ -465,7 +462,9 @@ function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, 
 		this.turnCount++;
 	};
 
-	this.hardUpdateView = function () {
+	this.updateView = function () {
+        //TODO: GET NEW DATA FROM SERVER
+
 		this.display.update();
         this.display.updateTurnCountDisplay(this.turnCount);
 

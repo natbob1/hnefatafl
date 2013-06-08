@@ -53,4 +53,5 @@ function resetGame () {
   localStorage.clear();
 
   mainGame.reset();
+  mainGame.updateView();
 }

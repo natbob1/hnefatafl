@@ -61,12 +61,12 @@
     <script>
       $(document).ready(function () {
         initialGameSetup();
-        mainGame.hardUpdateView();
+        mainGame.updateView();
 
         var intro = introJs();
         var introCallback = function() {
           loadGame(mainGame);
-          mainGame.hardUpdateView();
+          mainGame.updateView();
         }
         
         intro.onexit(introCallback);
@@ -74,7 +74,7 @@
 
         $("#playGameButton").click(function() {
           loadGame(mainGame);
-          mainGame.hardUpdateView();
+          mainGame.updateView();
         });
 
         $("#newGameButton").click(resetGame);
