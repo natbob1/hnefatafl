@@ -43,7 +43,7 @@ function loadGame(game) {
 }
 
 function initialGameSetup() {
-  mainGame = new Game($("#board")[0], $("#playerTurn")[0], $("#turnCount")[0], doneDialog);
+  mainGame = new Game($("#board")[0], $("#playerTurn")[0], $("#turnCount")[0], null, doneDialog);
 
   setupClickCallbacks();
   setupIntro();

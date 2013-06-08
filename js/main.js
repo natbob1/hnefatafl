@@ -102,18 +102,19 @@ function Board () {
 		this.pieces = [];
 
 		var id = 0;
+        var i;
 
 		var black = [3,4,5,6,7,16,33,43,44,54,55,56,64,65,66,76,77,87,104,113,114,115,116,117];
-		for (var i = 0; i < black.length; i++) {
+		for (i = 0; i < black.length; i++) {
 			this.pieces.push(new Piece(id++, "black", false, new Point(Math.floor(black[i] / 11), black[i] % 11)));
 		}
 
 		var white = [38,48,49,50,58,59,61,62,70,71,72,82];
-		for (var i = 0; i < white.length; i++) {
+		for (i = 0; i < white.length; i++) {
 			this.pieces.push(new Piece(id++, "white", false, new Point(Math.floor(white[i] / 11), white[i] % 11)));
 		}
 
-		this.pieces.push(new Piece(id++, "white", true, new Point(5, 5)));
+		this.pieces.push(new Piece(id, "white", true, new Point(5, 5)));
 	};
 
 	this.pieceAtPoint = function (point) {
@@ -150,20 +151,22 @@ function Board () {
 	};
 
 	this.canMoveTo = function(piece, point) {
+        var i;
+
 		if (piece.location.isEqual(point) || !point.isValid() || ((point.isCorner() || point.isCenter()) && !piece.isQueen)) {
 			return false;
 		}
 
 		if (piece.location.x == point.x) {
 			if (piece.location.y < point.y) {
-				for (var i = piece.location.y + 1; i <= point.y; i++) {
+				for (i = piece.location.y + 1; i <= point.y; i++) {
 					if (this.pieceAtPoint(new Point(piece.location.x, i))) {
 						return false;
 					}
 				}
 			}
 			else {
-				for (var i = piece.location.y - 1; i >= point.y; i--) {
+				for (i = piece.location.y - 1; i >= point.y; i--) {
 					if (this.pieceAtPoint(new Point(piece.location.x, i))) {
 						return false;
 					}
@@ -172,14 +175,14 @@ function Board () {
 		}
 		else if (piece.location.y == point.y) {
 			if (piece.location.x < point.x) {
-				for (var i = piece.location.x + 1; i <= point.x; i++) {
+				for (i = piece.location.x + 1; i <= point.x; i++) {
 					if (this.pieceAtPoint(new Point(i, piece.location.y))) {
 						return false;
 					}
 				}
 			}
 			else {
-				for (var i = piece.location.x - 1; i >= point.x; i--) {
+				for (i = piece.location.x - 1; i >= point.x; i--) {
 					if (this.pieceAtPoint(new Point(i, piece.location.y))) {
 						return false;
 					}
@@ -221,11 +224,13 @@ function Board () {
 	};
 
 	this.isPieceTaken = function (piece) {
+        var i;
+
 		var adj = piece.location.adjacentPoints();
 
 		if (!piece.lastMovedPiece) {
 			if (!piece.isQueen) {
-				for (var i = 0; i < adj.length; i++) {
+				for (i = 0; i < adj.length; i++) {
 					if (this.pieceAtPoint(adj[i]) && (this.pieceAtPoint(adj[i]).color !== piece.color) && this.pieceAtPoint(adj[i]).lastMovedPiece) {
 						var op = piece.location.getOppositeAdjacentPoint(adj[i]);
 
@@ -240,7 +245,7 @@ function Board () {
 				}
 			}
 			else {
-				for (var i = 0; i < adj.length; i++) {
+				for (i = 0; i < adj.length; i++) {
 					if ( ( this.pieceAtPoint(adj[i]) && this.pieceAtPoint(adj[i]).color !== piece.color ) || adj[i].isCorner() || adj[i].isCenter() ) {
 						continue;
 					}
@@ -325,8 +330,9 @@ function Display(board, boardElement, turnElement, turnCountElement) {
 		var ins = [];
 		var outs = [];
 		var crosses = [];
+        var i;
 
-		for (var i = 0; i < squares.length; i++) {
+		for (i = 0; i < squares.length; i++) {
 			var view = this.isPieceAtElement(squares[i]); //Represents the previous state of the board
 			var model = this.board.pieceAtPoint(this.pointAtElement(squares[i])); //Represents the new state of the board
 
@@ -343,7 +349,7 @@ function Display(board, boardElement, turnElement, turnCountElement) {
 			}
 		}
 
-		for (var i = 0; i < outs.length; i++) {
+		for (i = 0; i < outs.length; i++) {
 			(function(elem) {
 				$(elem).fadeOut(400, function () {
 					$(elem).removeClass("white black queen");
@@ -352,7 +358,7 @@ function Display(board, boardElement, turnElement, turnCountElement) {
 			})(this.elementAtPoint(outs[i]));
 		}
 
-		for (var i = 0; i < ins.length; i++) {
+		for (i = 0; i < ins.length; i++) {
 			(function(elem, _class) {
 				$(elem).hide();
 
@@ -362,7 +368,7 @@ function Display(board, boardElement, turnElement, turnCountElement) {
 			})(this.elementAtPoint(ins[i]), this.classForPiece(this.board.pieceAtPoint(ins[i])));
 		}
 
-		for (var i = 0; i < crosses.length; i++) {
+		for (i = 0; i < crosses.length; i++) {
 			(function(elem, _class) {
 				$(elem).fadeOut(200, function () {
 					$(elem).removeClass("white black queen");
@@ -375,7 +381,7 @@ function Display(board, boardElement, turnElement, turnCountElement) {
 		$(squares).removeClass("possibleMove");
 		if (this.clickedPiece) {
 			var moveLocations = this.board.allValidMoveLocations(this.clickedPiece);
-			for (var i = 0; i < moveLocations.length; i++) {
+			for (i = 0; i < moveLocations.length; i++) {
 				(function(elem) {
 					$(elem).hide();
 					$(elem).addClass("possibleMove");

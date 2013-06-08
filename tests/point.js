@@ -88,10 +88,10 @@ test("test getOppositeAdjacentPoint", 4, function() {
   var edgeAdj = new Point(0, 1);
   var edgeNonAdj = new Point(1, 1);
 
-  equal(true, adj2.isEqual(norm.getOppositeAdjacentPoint(adj1)), "(6, 5) should be the opposite adjacent point around (5, 5) for (4, 5)")
-  equal(true, adj1.isEqual(norm.getOppositeAdjacentPoint(adj2)), "(4, 5) should be the opposite adjacent point around (5, 5) for (6, 5)")
-  equal(false, edge.getOppositeAdjacentPoint(edgeAdj), "There should be no adjacent point around (0, 0) for (0, 1)")
-  equal(false, edge.getOppositeAdjacentPoint(edgeNonAdj), "There should be no adjacent point around (0, 0) for (1, 1)")
+  equal(true, adj2.isEqual(norm.getOppositeAdjacentPoint(adj1)), "(6, 5) should be the opposite adjacent point around (5, 5) for (4, 5)");
+  equal(true, adj1.isEqual(norm.getOppositeAdjacentPoint(adj2)), "(4, 5) should be the opposite adjacent point around (5, 5) for (6, 5)");
+  equal(false, edge.getOppositeAdjacentPoint(edgeAdj), "There should be no adjacent point around (0, 0) for (0, 1)");
+  equal(false, edge.getOppositeAdjacentPoint(edgeNonAdj), "There should be no adjacent point around (0, 0) for (1, 1)");
 });
 
 test("test isEdge", 3, function() {

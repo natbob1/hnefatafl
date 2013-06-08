@@ -6,7 +6,7 @@ function setupClickCallbacks() {
     if (!mainGame.display.clickedPiece) {
       mainGame.display.clickedPiece = mainGame.board.pieceAtPoint(mainGame.display.pointAtElement(this));
 
-      if (!(mainGame.display.clickedPiece.color === "white") === mainGame.whiteMove) {
+      if (!(mainGame.display.clickedPiece.color === "white") === mainGame.whiteMove) { //User clicked on the other player's piece
         mainGame.display.clickedPiece = null;
 
         //TODO: SAY IT'S NOT YOUR TURN IF IT IS A NETWORK GAME
@@ -20,20 +20,20 @@ function setupClickCallbacks() {
       var newLocation = mainGame.display.pointAtElement(this);
 
       if (newLocation) {
-        if(mainGame.display.clickedPiece.location.isEqual(newLocation)) {
+        if(mainGame.display.clickedPiece.location.isEqual(newLocation)) { //User unclicked the piece that was currently selected
           mainGame.display.clickedPiece = null;
           mainGame.display.update();
           return false;
         }
-        else if (mainGame.board.pieceAtPoint(newLocation) && mainGame.board.pieceAtPoint(newLocation).color == mainGame.display.clickedPiece.color) {
+        else if (mainGame.board.pieceAtPoint(newLocation) && mainGame.board.pieceAtPoint(newLocation).color == mainGame.display.clickedPiece.color) { //User selected a different piece of his color
           mainGame.display.clickedPiece = mainGame.board.pieceAtPoint(newLocation);
           mainGame.display.update();
           return false;
         }
 
-        var move = new Move(mainGame.display.clickedPiece, newLocation); //***MOVE CREATED***
+        var move = new Move(mainGame.display.clickedPiece, newLocation);
 
-        if (!mainGame.tryMove(move)) {
+        if (!mainGame.tryMove(move)) { //User's move was invalid
           invalidMoveDialog("That move isn't allowed!");
           return false;
         }
