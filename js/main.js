@@ -480,18 +480,24 @@ function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, 
 	};
 
 	this.updateView = function () {
+        var update = function (game) {
+            game.display.update();
+            game.display.updateTurnCountDisplay(game.turnCount);
+
+            if (game.whiteMove) {
+                game.display.updateTurnDisplay("White's Move");
+            }
+            else {
+                game.display.updateTurnDisplay("Black's Move");
+            }
+        };
+
         if (this.gameId) {
             //TODO: GET NEW DATA FROM SERVER
+
+            update(this);
         }
 
-		this.display.update();
-        this.display.updateTurnCountDisplay(this.turnCount);
-
-		if (this.whiteMove) {
-			this.display.updateTurnDisplay("White's Move");
-		}
-		else {
-			this.display.updateTurnDisplay("Black's Move");
-		}
+        update(this);
 	};
 }
