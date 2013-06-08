@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Hnefatafl</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
     <script type="text/javascript" src="js/libs/intro.js"></script>
     <script type="text/javascript" src="js/libs/jquery.simplemodal.1.4.4.min.js"></script>
 
-    <link href='http://fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css' />
+    <link href='http://fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'/>
     <link href='http://fonts.googleapis.com/css?family=Tauri' rel='stylesheet' type='text/css'>
-    <link href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/redmond/jquery-ui.css' rel='stylesheet' type='text/css' />
-    <link href="css/libs/introjs.css" rel="stylesheet" type="text/css" />
+    <link href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/redmond/jquery-ui.css' rel='stylesheet' type='text/css'/>
+    <link href="css/libs/introjs.css" rel="stylesheet" type="text/css"/>
 
     <script type="text/javascript" src="js/main.js"></script>
     <script type="text/javascript" src="js/dialogs.js"></script>
@@ -18,78 +18,86 @@
     <script type="text/javascript" src="js/clickCallbacks.js"></script>
     <script type="text/javascript" src="js/setupIntro.js"></script>
 
-    <link href="css/style.css" rel="stylesheet" type="text/css" />
-  </head>
-  <body>
-    <div id="holder">
-      <div id="board">
-      </div>
-      <div class="buttons">
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="holder">
+    <div id="board">
+    </div>
+    <div class="buttons">
         <a id="newGameButton">New Game</a>
         <span id="playerTurn"></span>
         <span id="turnCount"></span>
-      </div>
-      <div id="credits">Coding &amp; Design: Nathan Nieman <span class="divider">|</span> Graphics: Kent Trehearne </div>
     </div>
+    <div id="credits">Coding &amp; Design: Nathan Nieman <span class="divider">|</span> Graphics: Kent Trehearne</div>
+</div>
 
-    <div class="hidden" id="splash">
-      <h2>Welcome to</h2>
-      <h1>Hnefatafl</h1>
-      <div class="buttons">
+<div class="hidden" id="splash">
+    <h2>Welcome to</h2>
+
+    <h1>Hnefatafl</h1>
+
+    <div class="buttons">
         <a class="splashClose" id="playGameButton">Play Game</a>
         <a class="splashClose" id="instructionsButton">Instructions</a>
-      </div>
     </div>
-    <div class="hidden" id="newGame">
-      <h2>Select a game mode:</h2>
-      <div class="buttons">
+</div>
+<div class="hidden" id="newGame">
+    <h2>Select a game mode:</h2>
+
+    <div class="buttons">
         <a class="splashClose" id="hotSeatGame">Hot Seat Game</a>
         <a class="splashClose" id="networkGame">Network Game</a>
-      </div>
     </div>
-    <div id="done-dialog" class="ui-dialog" title="Game Over!">
-      <p id="winText"></p>
-    </div>
-    <div id="invalid-dialog" class="ui-dialog" title="Oops.">
-      <p id="invalid-message"></p>
-    </div>
-    <audio autoplay loop>
-      <source src="audio/Acrostics.ogg" type="audio/ogg">
-      <source src="audio/Acrostics.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="takenEffect" preload="auto">
-      <source src="audio/taken.ogg" type="audio/ogg">
-      <source src="audio/taken.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="victoryEffect" preload="auto">
-      <source src="audio/victory.ogg" type="audio/ogg">
-      <source src="audio/victory.mp3" type="audio/mpeg">
-    </audio>
-    <script>
-      $(document).ready(function () {
+</div>
+<div id="done-dialog" class="ui-dialog" title="Game Over!">
+    <p id="winText"></p>
+</div>
+<div id="invalid-dialog" class="ui-dialog" title="Oops.">
+    <p id="invalid-message"></p>
+</div>
+<audio autoplay loop>
+    <source src="audio/Acrostics.ogg" type="audio/ogg">
+    <source src="audio/Acrostics.mp3" type="audio/mpeg">
+</audio>
+<audio id="takenEffect" preload="auto">
+    <source src="audio/taken.ogg" type="audio/ogg">
+    <source src="audio/taken.mp3" type="audio/mpeg">
+</audio>
+<audio id="victoryEffect" preload="auto">
+    <source src="audio/victory.ogg" type="audio/ogg">
+    <source src="audio/victory.mp3" type="audio/mpeg">
+</audio>
+<script>
+    $(document).ready(function () {
         initialGameSetup();
         mainGame.updateView();
 
         var intro = introJs();
-        function introCallback () {
-          loadGame(mainGame);
-          mainGame.updateView();
+
+        function introCallback() {
+            loadGame(mainGame);
+            mainGame.updateView();
         }
-        
+
         intro.onexit(introCallback);
         intro.oncomplete(introCallback);
 
         $("#playGameButton").click(introCallback);
-        $("#instructionsButton").click(function() {intro.start();});
+        $("#instructionsButton").click(function () {
+            intro.start();
+        });
 
         $("#newGameButton").click(newGameDialog);
         $("#hotSeatGame").click(resetGame);
         $("#networkGame").click(resetGame);
 
-        $(".splashClose").click(function() { $.modal.close() });
+        $(".splashClose").click(function () {
+            $.modal.close()
+        });
 
         splashDialog();
-      });
-    </script>
-  </body>
+    });
+</script>
+</body>
 </html>

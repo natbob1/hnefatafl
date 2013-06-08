@@ -1,4 +1,4 @@
-function splashDialog () {
+function splashDialog() {
     $("#splash").modal({
         onOpen: function (dialog) {
             dialog.overlay.fadeIn(400);
@@ -16,7 +16,7 @@ function splashDialog () {
     });
 }
 
-function newGameDialog () {
+function newGameDialog() {
     $("#newGame").modal({
         onOpen: function (dialog) {
             dialog.overlay.fadeIn(400);
@@ -33,34 +33,38 @@ function newGameDialog () {
     });
 }
 
-function doneDialog (game) {
-  $("#winText").html("Winner is the " + game.winner.color + " player!");
-  $("#done-dialog").dialog({
-    modal: true,
-    dialogClass: "no-close",
-    draggable: false,
-    resizable: false,
-    show: "fadeIn",
-    hide: "fadeOut",
-    buttons: [{text: "New Game", click: function() {
-      $(this).dialog( "close" );
-      resetGame();
-    }}]
-  });
+function doneDialog(game) {
+    $("#winText").html("Winner is the " + game.winner.color + " player!");
+    $("#done-dialog").dialog({
+        modal: true,
+        dialogClass: "no-close",
+        draggable: false,
+        resizable: false,
+        show: "fadeIn",
+        hide: "fadeOut",
+        buttons: [
+            {text: "New Game", click: function () {
+                $(this).dialog("close");
+                resetGame();
+            }}
+        ]
+    });
 }
 
 function invalidMoveDialog(message) {
-  $("#invalid-message").html(message);
-  
-  $("#invalid-dialog").dialog({
-    modal: true,
-    dialogClass: "no-close",
-    draggable: false,
-    resizable: false,
-    show: "fadeIn",
-    hide: "fadeOut",
-    buttons: [{text: "Okay", click: function() {
-      $(this).dialog( "close" );
-    }}]
-  });
+    $("#invalid-message").html(message);
+
+    $("#invalid-dialog").dialog({
+        modal: true,
+        dialogClass: "no-close",
+        draggable: false,
+        resizable: false,
+        show: "fadeIn",
+        hide: "fadeOut",
+        buttons: [
+            {text: "Okay", click: function () {
+                $(this).dialog("close");
+            }}
+        ]
+    });
 }
