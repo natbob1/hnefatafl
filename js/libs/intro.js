@@ -42,7 +42,7 @@
   }
 
   /**
-   * Initiate a new introduction/guide from an element in the page
+   * Initiate a new introduction/guide from an boardElement in the page
    *
    * @api private
    * @method _introForElement
@@ -61,8 +61,8 @@
         var currentItem = this._options.steps[i];
         //set the step
         currentItem.step = i + 1;
-        //grab the element with given selector from the page
-        currentItem.element = document.querySelector(currentItem.element);
+        //grab the boardElement with given selector from the page
+        currentItem.boardElement = document.querySelector(currentItem.boardElement);
         introItems.push(currentItem);
       }
 
@@ -70,7 +70,7 @@
       //use steps from data-* annotations
 
       var allIntroSteps = targetElm.querySelectorAll('*[data-intro]');
-      //if there's no element to intro
+      //if there's no boardElement to intro
       if (allIntroSteps.length < 1) {
         return false;
       }
@@ -78,7 +78,7 @@
       for (var i = 0, elmsLength = allIntroSteps.length; i < elmsLength; i++) {
         var currentElement = allIntroSteps[i];
         introItems.push({
-          element: currentElement,
+          boardElement: currentElement,
           intro: currentElement.getAttribute('data-intro'),
           step: parseInt(currentElement.getAttribute('data-step'), 10),
           position: currentElement.getAttribute('data-position') || this._options.tooltipPosition
@@ -226,7 +226,7 @@
     if (helperLayer) {
       helperLayer.parentNode.removeChild(helperLayer);
     }
-    //remove `introjs-showElement` class from the element
+    //remove `introjs-showElement` class from the boardElement
     var showElement = document.querySelector('.introjs-showElement');
     if (showElement) {
       showElement.className = showElement.className.replace(/introjs-[a-zA-Z]+/g, '').replace(/^\s+|\s+$/g, ''); // This is a manual trim.
@@ -305,7 +305,7 @@
       //prevent error when `this._currentStep` in undefined
       if(!this._introItems[this._currentStep]) return;
 
-      var elementPosition = _getOffset(this._introItems[this._currentStep].element);
+      var elementPosition = _getOffset(this._introItems[this._currentStep].boardElement);
       //set new position to helper layer
       helperLayer.setAttribute('style', 'width: ' + (elementPosition.width  + 20)  + 'px; ' +
                                         'height:' + (elementPosition.height + 20)  + 'px; ' +
@@ -315,7 +315,7 @@
   }
 
   /**
-   * Show an element on the page
+   * Show an boardElement on the page
    *
    * @api private
    * @method _showElement
@@ -324,12 +324,12 @@
   function _showElement(targetElement) {
 
     if (typeof (this._introChangeCallback) !== 'undefined') {
-        this._introChangeCallback.call(this, targetElement.element);
+        this._introChangeCallback.call(this, targetElement.boardElement);
     }
     
     var self = this,
         oldHelperLayer = document.querySelector('.introjs-helperLayer'),
-        elementPosition = _getOffset(targetElement.element);
+        elementPosition = _getOffset(targetElement.boardElement);
 
     if(oldHelperLayer != null) {
       var oldHelperNumberLayer = oldHelperLayer.querySelector('.introjs-helperNumberLayer'),
@@ -369,7 +369,7 @@
         //set current tooltip text
         oldtooltipLayer.innerHTML = targetElement.intro;
         //set the tooltip position
-        _placeTooltip.call(self, targetElement.element, oldtooltipContainer, oldArrowLayer);
+        _placeTooltip.call(self, targetElement.boardElement, oldtooltipContainer, oldArrowLayer);
         //show the tooltip
         oldtooltipContainer.style.opacity = 1;
       }, 350);
@@ -384,7 +384,7 @@
       //set new position to helper layer
       _setHelperLayerPosition.call(self, helperLayer);
 
-      //add helper layer to target element
+      //add helper layer to target boardElement
       this._targetElement.appendChild(helperLayer);
 
       arrowLayer.className = 'introjs-arrow';
@@ -450,7 +450,7 @@
       tooltipButtonsLayer.appendChild(nextTooltipButton);
 
       //set proper position
-      _placeTooltip.call(self, targetElement.element, tooltipLayer, arrowLayer);
+      _placeTooltip.call(self, targetElement.boardElement, tooltipLayer, arrowLayer);
     }
 
     if (this._currentStep == 0) {
@@ -470,17 +470,17 @@
     //Set focus on "next" button, so that hitting Enter always moves you onto the next step
     nextTooltipButton.focus();
 
-    //add target element position style
-    targetElement.element.className += ' introjs-showElement';
+    //add target boardElement position style
+    targetElement.boardElement.className += ' introjs-showElement';
 
-    var currentElementPosition = _getPropValue(targetElement.element, 'position');
+    var currentElementPosition = _getPropValue(targetElement.boardElement, 'position');
     if (currentElementPosition !== 'absolute' &&
         currentElementPosition !== 'relative') {
       //change to new intro item
-      targetElement.element.className += ' introjs-relativePosition';
+      targetElement.boardElement.className += ' introjs-relativePosition';
     }
 
-    var parentElm = targetElement.element.parentNode;
+    var parentElm = targetElement.boardElement.parentNode;
     while(parentElm != null) {
       if(parentElm.tagName.toLowerCase() === 'body') break;
 
@@ -491,8 +491,8 @@
       parentElm = parentElm.parentNode;
     }
 
-    if (!_elementInViewport(targetElement.element)) {
-      var rect = targetElement.element.getBoundingClientRect(),
+    if (!_elementInViewport(targetElement.boardElement)) {
+      var rect = targetElement.boardElement.getBoundingClientRect(),
           top = rect.bottom - (rect.bottom - rect.top),
           bottom = rect.bottom - _getWinSize().height;
 
@@ -508,7 +508,7 @@
   }
 
   /**
-   * Get an element CSS property on the page
+   * Get an boardElement CSS property on the page
    * Thanks to JavaScript Kit: http://www.javascriptkit.com/dhtmltutors/dhtmlcascade4.shtml
    *
    * @api private
@@ -552,7 +552,7 @@
 
   /**
    * Add overlay layer to the page
-   * http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
+   * http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-boardElement-is-visible-in-the-current-viewport
    *
    * @api private
    * @method _elementInViewport
@@ -584,7 +584,7 @@
     //set css class name
     overlayLayer.className = 'introjs-overlay';
 
-    //check if the target element is body, we should calculate the size of overlay layer in a better way
+    //check if the target boardElement is body, we should calculate the size of overlay layer in a better way
     if (targetElm.tagName.toLowerCase() === 'body') {
       styleText += 'top: 0;bottom: 0; left: 0;right: 0;position: fixed;';
       overlayLayer.setAttribute('style', styleText);
@@ -617,7 +617,7 @@
   }
 
   /**
-   * Get an element position on the page
+   * Get an boardElement position on the page
    * Thanks to `meouw`: http://stackoverflow.com/a/442474/375966
    *
    * @api private
@@ -634,7 +634,7 @@
     //set height
     elementPosition.height = element.offsetHeight;
 
-    //calculate element top and left
+    //calculate boardElement top and left
     var _x = 0;
     var _y = 0;
     while(element && !isNaN(element.offsetLeft) && !isNaN(element.offsetTop)) {
@@ -671,13 +671,13 @@
       return new IntroJs(targetElm);
 
     } else if (typeof (targetElm) === 'string') {
-      //select the target element with query selector
+      //select the target boardElement with query selector
       var targetElement = document.querySelector(targetElm);
 
       if (targetElement) {
         return new IntroJs(targetElement);
       } else {
-        throw new Error('There is no element with given selector.');
+        throw new Error('There is no boardElement with given selector.');
       }
     } else {
       return new IntroJs(document.body);

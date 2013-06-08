@@ -843,7 +843,7 @@ extend( QUnit, {
 		}
 	},
 
-	// Trigger an event on an element.
+	// Trigger an event on an boardElement.
 	// @example triggerEvent( document.body, "click" );
 	triggerEvent: function( elem, type, event ) {
 		if ( document.createEvent ) {
@@ -1434,7 +1434,7 @@ function saveGlobal() {
 
 	if ( config.noglobals ) {
 		for ( var key in window ) {
-			// in Opera sometimes DOM element ids show up here, ignore them
+			// in Opera sometimes DOM boardElement ids show up here, ignore them
 			if ( !hasOwn.call( window, key ) || /^qunit-test-output/.test( key ) ) {
 				continue;
 			}

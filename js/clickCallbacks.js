@@ -4,7 +4,7 @@ function setupClickCallbacks() {
   $("#board").find("div").on("click", function () {
 
     if (!mainGame.display.clickedPiece) {
-      mainGame.display.clickedPiece = mainGame.board.pieceAt(mainGame.display.pointAtElement(this));
+      mainGame.display.clickedPiece = mainGame.board.pieceAtPoint(mainGame.display.pointAtElement(this));
 
       if (!(mainGame.display.clickedPiece.color === "white") === mainGame.whiteMove) {
         mainGame.display.clickedPiece = null;
@@ -23,8 +23,8 @@ function setupClickCallbacks() {
           mainGame.display.update();
           return false;
         }
-        else if (mainGame.board.pieceAt(newLocation) && mainGame.board.pieceAt(newLocation).color == mainGame.display.clickedPiece.color) {
-          mainGame.display.clickedPiece = mainGame.board.pieceAt(newLocation);
+        else if (mainGame.board.pieceAtPoint(newLocation) && mainGame.board.pieceAtPoint(newLocation).color == mainGame.display.clickedPiece.color) {
+          mainGame.display.clickedPiece = mainGame.board.pieceAtPoint(newLocation);
           mainGame.display.update();
           return false;
         }
