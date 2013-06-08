@@ -1,3 +1,5 @@
+// Credit to Mark Pilgrim at Dive Into HTML5
+// http://diveintohtml5.info/storage.html
 function supportsLocalStorage() {
   return ('localStorage' in window) && window['localStorage'] !== null;
 }
@@ -30,13 +32,14 @@ function loadGame(game) {
   game.whiteMove = localStorage['Hnefatafl.whiteMove'] == "true";
   game.turnCount = parseInt(localStorage['Hnefatafl.turnCount']);
 
-  game.board.pieces = new Array();
+  game.board.pieces = [];
 
   for (var i = 0; i < parseInt(localStorage['Hnefatafl.numPieces']); i++) {
     var objPiece = JSON.parse(localStorage['Hnefatafl.piece.' + i]);
 
     game.board.pieces.push(new Piece(objPiece.id, objPiece.color, objPiece.isQueen, new Point(objPiece.location.x, objPiece.location.y)));
-  };
+  }
+  return true;
 }
 
 function initialGameSetup() {

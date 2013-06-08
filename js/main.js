@@ -14,28 +14,29 @@ function Move (piece, endLocation) {
 	this.endLocation = endLocation;
 }
 
+function HumanPlayer (color) {
+	this.color = color;
+}
+
 function Point (x, y) {
 	this.x = x;
 	this.y = y;
 
 	this.isAdjacent = function (point) {
-		var pts = this.adjacentPoints();
+        var pts = this.adjacentPoints();
 
-		for (var i = 0; i < pts.length; i++) {
-			if (point.isEqual(pts[i])) {
-				return true;
-			}
-		}
+        for (var i = 0; i < pts.length; i++) {
+            if (point.isEqual(pts[i])) {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    };
 
 	this.isValid = function () {
-		if (this.x > 10 || this.x < 0 || this.y > 10 || this.y < 0) {
-			return false;
-		}
-		return true;
-	}
+        return this.x <= 10 && this.x >= 0 && this.y <= 10 && this.y >= 0;
+	};
 
 	this.adjacentPoints = function () {
 		var pts = [];
@@ -54,7 +55,7 @@ function Point (x, y) {
 		}
 
 		return pts;
-	}
+	};
 
 	this.getOppositeAdjacentPoint = function (firstAdjacentPoint) {
 		var pt;
@@ -75,23 +76,23 @@ function Point (x, y) {
 		else {
 			return false;
 		}
-	}
+	};
 
 	this.isEdge = function () {
 		return this.adjacentPoints().length <= 3;
-	}
+	};
 
 	this.isCorner = function () {
 		return this.adjacentPoints().length === 2
-	}
+	};
 
 	this.isCenter = function () {
 		return this.isEqual(new Point(5, 5));
-	}
+	};
 
 	this.isEqual = function (otherPoint) {
 		return (this.x === otherPoint.x) && (this.y === otherPoint.y)
-	}
+	};
 }
 
 function Board () {
@@ -99,13 +100,13 @@ function Board () {
 	this.removedPieces = [];
 
 	this.pieceAt = function (point) {
-		for (var i = 0; i < this.pieces.length; i++) {
-			if (point.isEqual(this.pieces[i].location)) {
-				return this.pieces[i];
-			}
-		}
-		return false;
-	}
+        for (var i = 0; i < this.pieces.length; i++) {
+            if (point.isEqual(this.pieces[i].location)) {
+                return this.pieces[i];
+            }
+        }
+        return false;
+    };
 
 	this.pieceWithId = function (id) {
 		for (var i = 0; i < this.pieces.length; i++) {
@@ -114,7 +115,7 @@ function Board () {
 			}
 		}
 		return false;
-	}
+	};
 
 	this.removePiece = function (piece) {
 		for (var i = 0; i < this.pieces.length; i++) {
@@ -122,7 +123,7 @@ function Board () {
 				this.removedPieces.push(this.pieces.splice(i, 1)[0]);
 			}
 		}
-	}
+	};
 
 	this.canMoveTo = function(piece, point) {
 		if (piece.location.isEqual(point) || !point.isValid() || ((point.isCorner() || point.isCenter()) && !piece.isQueen)) {
@@ -166,7 +167,7 @@ function Board () {
 		}
 
 		return true;
-	}
+	};
 
 	this.allValidMoveLocations = function(piece) {
 		var points = [];
@@ -181,25 +182,25 @@ function Board () {
 		}
 
 		return points;
-	}
+	};
 
 	this.checkForTakenPieces = function () {
 		var removes = [];
 
-		for (var i in this.pieces) {
+		for (var i = 0; i < this.pieces.length; i++) {
 			if (this.isPieceTaken(this.pieces[i])) {
 				removes.push(this.pieces[i]);
 			}
 		}
 
 		var count = 0;
-		for (var i in removes) {
+		for (var i = 0; i < removes.length; i++) {
 			this.removePiece(removes[i]);
 			count++;
 		}
 
 		return count;
-	}
+	};
 
 	this.checkForVictory = function() {
 		for (var i = 0; i < this.pieces.length; i++) {
@@ -214,14 +215,14 @@ function Board () {
 		}
 
 		return "black";
-	}
+	};
 
 	this.isPieceTaken = function (piece) {
 		var adj = piece.location.adjacentPoints();
 
 		if (!piece.lastMovedPiece) {
 			if (!piece.isQueen) {
-				for (var i in adj) {
+				for (var i = 0; i < adj.length; i++) {
 					if (this.pieceAt(adj[i]) && (this.pieceAt(adj[i]).color !== piece.color) && this.pieceAt(adj[i]).lastMovedPiece) {
 						var op = piece.location.getOppositeAdjacentPoint(adj[i]);
 
@@ -236,7 +237,7 @@ function Board () {
 				}
 			}
 			else {
-				for (var i in adj) {
+				for (var i = 0; i < adj.length; i++) {
 					if ( ( this.pieceAt(adj[i]) && this.pieceAt(adj[i]).color !== piece.color ) || adj[i].isCorner() || adj[i].isCenter() ) {
 						continue;
 					}
@@ -248,7 +249,7 @@ function Board () {
 			}
 		}
 		return false;
-	}
+	};
 
 	this.setupPieces = function() {
 		this.pieces = [];
@@ -256,17 +257,17 @@ function Board () {
 		var id = 0;
 
 		var black = [3,4,5,6,7,16,33,43,44,54,55,56,64,65,66,76,77,87,104,113,114,115,116,117];
-		for (var i in black) {
+		for (var i = 0; i < black.length; i++) {
 			this.pieces.push(new Piece(id++, "black", false, new Point(Math.floor(black[i] / 11), black[i] % 11)));
 		}
 
 		var white = [38,48,49,50,58,59,61,62,70,71,72,82];
-		for (var i in white) {
+		for (var i = 0; i < white.length; i++) {
 			this.pieces.push(new Piece(id++, "white", false, new Point(Math.floor(white[i] / 11), white[i] % 11)));
 		}
 
 		this.pieces.push(new Piece(id++, "white", true, new Point(5, 5)));
-	}
+	};
 
 	this.setupPieces();
 }
@@ -290,12 +291,12 @@ function Display(board, boardElement, turnElement, turnCountElement) {
 		else {
 			return "black";
 		}
-	}
+	};
 
 	this.elementAtPoint = function (point) {
 		var index = point.y * 11 + point.x;
 		return this.element.children[index];
-	}
+	};
 
 	this.pointAtElement = function (element) {
 		for (var i = 0; i < this.element.children.length; i++) {
@@ -303,20 +304,21 @@ function Display(board, boardElement, turnElement, turnCountElement) {
 				return new Point(i % 11, Math.floor(i / 11));
 			}
 		}
-	}
+        return false;
+	};
 
 	this.setupDisplay = function () {
 		$(this.element).empty();
 
 		for (var i = 0; i < 121; i++) {
-			$(this.element).append($('<div/>'));
+			$(this.element).append($('<div></div>'));
 			$("div:nth-child(11n)", this.element).addClass("right");
 		}
-	}
+	};
 
 	this.pieceAtElement = function(element) {
 		return $(element).hasClass("white") || $(element).hasClass("black") || $(element).hasClass("queen");
-	}
+	};
 
 	this.update = function () {
 		var squares = $(this.element).children();
@@ -372,24 +374,24 @@ function Display(board, boardElement, turnElement, turnCountElement) {
 
 		$(squares).removeClass("possibleMove");
 		if (this.clickedPiece) {
-			var moveLocs = this.board.allValidMoveLocations(this.clickedPiece);
-			for (var i = 0; i < moveLocs.length; i++) {
+			var moveLocations = this.board.allValidMoveLocations(this.clickedPiece);
+			for (var i = 0; i < moveLocations.length; i++) {
 				(function(elem) {
 					$(elem).hide();
 					$(elem).addClass("possibleMove");
 					$(elem).fadeIn(200);
-				})(this.elementAtPoint(moveLocs[i]));
+				})(this.elementAtPoint(moveLocations[i]));
 			}
 		}
-	}
+	};
 
 	this.updateTurnDisplay = function (displayText) {
 		$(this.playerTurnDisplayElement).html(displayText);
-	}
+	};
 
 	this.updateTurnCountDisplay = function (count) {
 		$(this.turnCountDisplayElement).html("Turn #" + count);
-	}
+	};
 
 	this.setupDisplay();
 }
@@ -397,11 +399,11 @@ function Display(board, boardElement, turnElement, turnCountElement) {
 function Sound () {
 	this.victory = function () {
 		$("#victoryEffect")[0].play();
-	}
+	};
 
 	this.pieceTaken = function () {
 		$("#takenEffect")[0].play();
-	}
+	};
 }
 
 function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, doneCallback) {
@@ -434,26 +436,25 @@ function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, 
 			
 			this.done(this);
 		}
-	}
+	};
 
 	this.reset = function () {
 		this.whiteMove = true;
 		this.winner = null;
-		this.turnCount = 1
+		this.turnCount = 1;
 
 		this.board.setupPieces();
 		this.hardUpdateView();
-	}
+	};
 
 	this.moveIsValid = function (move) {
 		return ( (move.piece.color === "white") === this.whiteMove ) && this.board.canMoveTo(move.piece, move.endLocation);
-	}
+	};
 
 	this.executeMove = function (move) {
 		for (var i = 0; i < this.board.pieces.length; i++) {
 			this.board.pieces[i].lastMovedPiece = false;
 		}
-		var startLocation = move.piece.location;
 
 		move.piece.location = move.endLocation;
 
@@ -462,26 +463,19 @@ function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, 
 		this.whiteMove = !this.whiteMove;
 
 		this.turnCount++;
-	}
+	};
 
-	this.updateTurnDisplay = function () {
+	this.hardUpdateView = function () {
+		this.display.update();
+        this.display.updateTurnCountDisplay(this.turnCount);
+
 		if (this.whiteMove) {
 			this.display.updateTurnDisplay("White's Move");
 		}
 		else {
 			this.display.updateTurnDisplay("Black's Move");
 		}
-	}
-
-	this.updateTurnCountDisplay = function () {
-		this.display.updateTurnCountDisplay(this.turnCount);
-	}
-
-	this.hardUpdateView = function () {
-		this.display.update();
-		this.updateTurnDisplay();
-		this.updateTurnCountDisplay();
-	}
+	};
 
 	this.tryMove = function (move) {
 		if (this.moveIsValid(move)) {
@@ -490,5 +484,5 @@ function Game (boardElement, playerTurnDisplayElement, turnCountDisplayElement, 
 		}
 
 		return false;
-	}
+	};
 }

@@ -1,7 +1,7 @@
 function setupClickCallbacks() {
   mainGame.display.clickedPiece = null;
 
-  $("#board div").on("click", function () {
+  $("#board").find("div").on("click", function () {
 
     if (!mainGame.display.clickedPiece) {
       mainGame.display.clickedPiece = mainGame.board.pieceAt(mainGame.display.pointAtElement(this));
@@ -40,11 +40,7 @@ function setupClickCallbacks() {
       mainGame.display.clickedPiece = null;
       mainGame.tick();
       saveGame(mainGame);
+      return true;
     }
   });
-}
-
-function clearClickCallbacks() {
-  mainGame.display.clickedPiece = null;
-  $("#board div").unbind("click");
 }
