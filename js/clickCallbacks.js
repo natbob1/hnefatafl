@@ -33,7 +33,7 @@ function setupClickCallbacks() {
 
                 var move = new Move(mainGame.display.clickedPiece, newLocation);
 
-                if (!mainGame.tryMove(move)) { //User's move was invalid
+                if (!mainGame.executeMove(move)) { //User's move was invalid
                     invalidMoveDialog("That move isn't allowed!");
                     return false;
                 }

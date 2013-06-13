@@ -1,3 +1,12 @@
+/*module.exports = {
+    Piece: Piece,
+    Move: Move,
+    HumanPlayer: HumanPlayer,
+    Point: Point,
+    Board: Board,
+    Game: Game
+};*/
+
 //TODO: Write Unit Tests for Board, Game?, & Display?
 //TODO: Move backend to Node.js and add Multiplayer functionality
 
@@ -412,8 +421,7 @@ function Sound() {
     };
 }
 
-function Game(boardElement, playerTurnDisplayElement, turnCountDisplayElement, gameId, doneCallback) {
-    this.gameId = gameId;
+function Game(boardElement, playerTurnDisplayElement, turnCountDisplayElement, doneCallback) {
     this.done = doneCallback;
     this.board = new Board();
     this.display = new Display(this.board, boardElement, playerTurnDisplayElement, turnCountDisplayElement);
@@ -421,6 +429,8 @@ function Game(boardElement, playerTurnDisplayElement, turnCountDisplayElement, g
     this.whitePlayer = new HumanPlayer("white");
     this.blackPlayer = new HumanPlayer("black");
 
+    this.gameId = null;
+    this.host = null;
     this.winner = null;
     this.whiteMove = true;
     this.turnCount = 1;
@@ -458,34 +468,30 @@ function Game(boardElement, playerTurnDisplayElement, turnCountDisplayElement, g
     };
 
     this.executeMove = function (move) {
-        for (var i = 0; i < this.board.pieces.length; i++) {
-            this.board.pieces[i].lastMovedPiece = false;
+        if (!this.moveIsValid(move)) {
+            return false;
         }
-
-        move.piece.location = move.endLocation;
-
-        move.piece.lastMovedPiece = true;
-
-        this.whiteMove = !this.whiteMove;
-
-        this.turnCount++;
 
         if (this.gameId) {
             //TODO: SEND MOVE TO SERVER AND RETURN TRUE IF IT WORKED
         }
         else {
+            for (var i = 0; i < this.board.pieces.length; i++) {
+                this.board.pieces[i].lastMovedPiece = false;
+            }
+
+            move.piece.location = move.endLocation;
+
+            move.piece.lastMovedPiece = true;
+
+            this.whiteMove = !this.whiteMove;
+
+            this.turnCount++;
+
             saveGame(mainGame);
         }
 
         return true;
-    };
-
-    this.tryMove = function (move) {
-        if (this.moveIsValid(move)) {
-            return this.executeMove(move);
-        }
-
-        return false;
     };
 
     this.updateView = function () {
@@ -509,4 +515,14 @@ function Game(boardElement, playerTurnDisplayElement, turnCountDisplayElement, g
 
         update(this);
     };
+
+    this.setHotSeat = function () {
+        this.gameId = null;
+        this.host = null;
+    };
+
+    this.setNetwork = function (gameId, host) {
+        this.gameId = gameId;
+        this.host = host;
+    }
 }

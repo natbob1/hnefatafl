@@ -43,15 +43,25 @@ function loadGame(game) {
 }
 
 function initialGameSetup() {
-    mainGame = new Game($("#board")[0], $("#playerTurn")[0], $("#turnCount")[0], null, doneDialog);
+    mainGame = new Game($("#board")[0], $("#playerTurn")[0], $("#turnCount")[0], doneDialog);
 
     setupClickCallbacks();
     setupIntro();
 }
 
-function resetGame() {
+function newHotSeatGame() {
     localStorage.clear();
+
+    mainGame.setHotSeat();
 
     mainGame.reset();
     mainGame.updateView();
+}
+
+function newNetworkGame() {
+    $.getJSON("getCode.json").done(function (data) {
+        console.log(data);
+        //mainGame.setNetwork(data.gameId, true);
+    });
+
 }

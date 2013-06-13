@@ -126,6 +126,16 @@ h1 {
     width: 500px;
 }
 
+#networkGameCode {
+    width: 500px;
+}
+#networkGameCode input {
+    padding: 5px;
+    text-align: center;
+    font-family: Courier, monospace;
+    font-size: 16pt;
+}
+
 /* SimpleModal Styles */
 #simplemodal-overlay {
     background-color: #000;

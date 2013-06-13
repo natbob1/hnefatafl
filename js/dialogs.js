@@ -33,6 +33,30 @@ function newGameDialog() {
     });
 }
 
+function networkGameCodeDialog() {
+    newNetworkGame();
+    $("#gameCode").val(mainGame.gameId);
+
+    $("#networkGameCode input[type=text]").click(function() {
+        $(this).select();
+    });
+
+    $("#networkGameCode").modal({
+        onOpen: function (dialog) {
+            dialog.overlay.fadeIn(400);
+            dialog.container.fadeIn(400);
+            dialog.data.fadeIn(400);
+        },
+        onClose: function (dialog) {
+            dialog.overlay.fadeOut(400);
+            dialog.container.fadeOut(400);
+            dialog.data.fadeOut(400, function () {
+                $.modal.close();
+            });
+        }
+    });
+}
+
 function doneDialog(game) {
     $("#winText").html("Winner is the " + game.winner.color + " player!");
     $("#done-dialog").dialog({
@@ -45,7 +69,7 @@ function doneDialog(game) {
         buttons: [
             {text: "New Game", click: function () {
                 $(this).dialog("close");
-                resetGame();
+                newGameDialog();
             }}
         ]
     });
