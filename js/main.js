@@ -285,12 +285,12 @@ function Board() {
     this.setupPieces();
 }
 
-function Display(board, boardElement, turnElement, turnCountElement) {
+function Display(boardElement, turnElement, turnCountElement) {
     this.boardElement = boardElement;
     this.playerTurnDisplayElement = turnElement;
     this.turnCountDisplayElement = turnCountElement;
 
-    this.board = board;
+    this.board = null;
     this.clickedPiece = null;
 
     this.setup = function () {
@@ -411,26 +411,29 @@ function Display(board, boardElement, turnElement, turnCountElement) {
     this.setup();
 }
 
-function Sound() {
+function Sound(victoryElement, pieceTakenElement) {
     this.victory = function () {
-        $("#victoryEffect")[0].play();
+        victoryElement.play();
     };
 
     this.pieceTaken = function () {
-        $("#takenEffect")[0].play();
+        pieceTakenElement.play();
     };
 }
 
-function Game(boardElement, playerTurnDisplayElement, turnCountDisplayElement, doneCallback) {
-    this.done = doneCallback;
+function Game(display, sound, doneCallback) {
     this.board = new Board();
-    this.display = new Display(this.board, boardElement, playerTurnDisplayElement, turnCountDisplayElement);
-    this.sound = new Sound();
+    this.display = display;
+    this.display.board = this.board;
+
+    this.sound = sound;
     this.whitePlayer = new HumanPlayer("white");
     this.blackPlayer = new HumanPlayer("black");
+    this.done = doneCallback;
 
     this.gameId = null;
     this.host = null;
+
     this.winner = null;
     this.whiteMove = true;
     this.turnCount = 1;
