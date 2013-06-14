@@ -542,6 +542,12 @@ function Game(display, sound, doneCallback) {
 
         this.whiteMove = gameJSON.whiteMove;
         this.turnCount = gameJSON.turnCount;
-        this.board.pieces = gameJSON.pieces;
+
+        this.board.pieces = [];
+        for (var i = 0; i < gameJSON.pieces.length; i++) {
+            var pieceJSON = gameJSON.pieces[i];
+
+            this.board.pieces.push(new Piece(pieceJSON.id, pieceJSON.color, pieceJSON.isQueen, new Point(pieceJSON.location.x, pieceJSON.location.y)));
+        }
     };
 }
