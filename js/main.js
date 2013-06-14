@@ -524,5 +524,21 @@ function Game(boardElement, playerTurnDisplayElement, turnCountDisplayElement, d
     this.setNetwork = function (gameId, host) {
         this.gameId = gameId;
         this.host = host;
-    }
+    };
+
+    this.toJSONString = function () {
+        return JSON.stringify({
+            whiteMove: this.whiteMove,
+            turnCount: this.turnCount,
+            pieces: this.board.pieces
+        });
+    };
+
+    this.fromJSONString = function (gameJSONString) {
+        var gameJSON = JSON.parse(gameJSONString);
+
+        this.whiteMove = gameJSON.whiteMove;
+        this.turnCount = gameJSON.turnCount;
+        this.board.pieces = gameJSON.pieces;
+    };
 }

@@ -1,11 +1,12 @@
 // Credit to Mark Pilgrim at Dive Into HTML5
 // http://diveintohtml5.info/storage.html
+
 function supportsLocalStorage() {
     return ('localStorage' in window) && window['localStorage'] !== null;
 }
 
 function saveGame(game) {
-    if (!supportsLocalStorage() || game.winner !== null) {
+    if (!(supportsLocalStorage() && game.winner === null)) {
         return false;
     }
 
