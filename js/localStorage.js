@@ -10,36 +10,17 @@ function saveGame(game) {
         return false;
     }
 
-    localStorage.clear();
-
-    localStorage['Hnefatafl.savedGame'] = true;
-
-    for (var i = 0; i < game.board.pieces.length; i++) {
-        localStorage['Hnefatafl.piece.' + i] = JSON.stringify(game.board.pieces[i]);
-    }
-    localStorage['Hnefatafl.numPieces'] = i;
-
-    localStorage['Hnefatafl.whiteMove'] = game.whiteMove;
-    localStorage['Hnefatafl.turnCount'] = game.turnCount;
+    localStorage['Hnefatafl'] = game.toJSONString();
 
     return true;
 }
 
 function loadGame(game) {
-    if (!supportsLocalStorage() || localStorage['Hnefatafl.savedGame'] !== "true") {
+    if (!supportsLocalStorage() || !localStorage['Hnefatafl']) {
         return false;
     }
 
-    game.whiteMove = localStorage['Hnefatafl.whiteMove'] == "true";
-    game.turnCount = parseInt(localStorage['Hnefatafl.turnCount']);
-
-    game.board.pieces = [];
-
-    for (var i = 0; i < parseInt(localStorage['Hnefatafl.numPieces']); i++) {
-        var objPiece = JSON.parse(localStorage['Hnefatafl.piece.' + i]);
-
-        game.board.pieces.push(new Piece(objPiece.id, objPiece.color, objPiece.isQueen, new Point(objPiece.location.x, objPiece.location.y)));
-    }
+    game.fromJSONString(localStorage['Hnefatafl']);
     return true;
 }
 
