@@ -229,7 +229,6 @@ function Board() {
 
     this.isPieceTaken = function (piece) {
         var i;
-
         var adj = piece.location.adjacentPoints();
 
         if (!piece.lastMovedPiece) {
@@ -420,12 +419,15 @@ function Display(boardElement, turnElement, turnCountElement) {
 }
 
 function Sound(victoryElement, pieceTakenElement) {
+    this.victoryElement = victoryElement;
+    this.pieceTakenElement = pieceTakenElement;
+
     this.victory = function () {
-        victoryElement.play();
+        this.victoryElement.play();
     };
 
     this.pieceTaken = function () {
-        pieceTakenElement.play();
+        this.pieceTakenElement.play();
     };
 }
 
@@ -437,8 +439,9 @@ function Game(display, sound, doneCallback) {
     this.sound = sound;
     this.done = doneCallback;
 
-    this.gameId = null;
     this.performLocalProcessing = true;
+    this.isClient = true;
+    this.networkGameId = null;
 
     this.winner = null;
     this.whiteMove = true;
@@ -449,8 +452,12 @@ function Game(display, sound, doneCallback) {
             this.board.removePieces(this.board.checkForTakenPieces());
 
             if (this.performLocalProcessing) {
-                saveGame(this);
-                this.sound.pieceTaken();
+                if (!this.networkGameId) {
+                    saveGame(this);
+                }
+                if (this.isClient) {
+                    this.sound.pieceTaken();
+                }
             }
         }
 
