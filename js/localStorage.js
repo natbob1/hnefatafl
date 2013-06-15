@@ -6,7 +6,7 @@ function supportsLocalStorage() {
 }
 
 function saveGame(game) {
-    if (!(supportsLocalStorage() && game.winner === null)) {
+    if (!supportsLocalStorage() || game.winner !== null) {
         return false;
     }
 

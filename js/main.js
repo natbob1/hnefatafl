@@ -1,7 +1,6 @@
 /*module.exports = {
     Piece: Piece,
     Move: Move,
-    HumanPlayer: HumanPlayer,
     Point: Point,
     Board: Board,
     Game: Game
@@ -21,10 +20,6 @@ function Piece(id, color, isQueen, location) {
 function Move(piece, endLocation) {
     this.piece = piece;
     this.endLocation = endLocation;
-}
-
-function HumanPlayer(color) {
-    this.color = color;
 }
 
 function Point(x, y) {
@@ -162,7 +157,7 @@ function Board() {
     this.canMoveTo = function (piece, point) {
         var i;
 
-        if (piece.location.isEqual(point) || !point.isValid() || ((point.isCorner() || point.isCenter()) && !piece.isQueen)) {
+        if ( piece.location.isEqual(point) || !point.isValid() || ( ( point.isCorner() || point.isCenter() ) && !piece.isQueen ) ) {
             return false;
         }
 
@@ -240,23 +235,36 @@ function Board() {
         if (!piece.lastMovedPiece) {
             if (!piece.isQueen) {
                 for (i = 0; i < adj.length; i++) {
-                    if (this.pieceAtPoint(adj[i]) && (this.pieceAtPoint(adj[i]).color !== piece.color) && this.pieceAtPoint(adj[i]).lastMovedPiece) {
-                        var op = piece.location.getOppositeAdjacentPoint(adj[i]);
+                    if (
+                        this.pieceAtPoint(adj[i]) &&
+                        (this.pieceAtPoint(adj[i]).color !== piece.color) &&
+                        this.pieceAtPoint(adj[i]).lastMovedPiece
+                        ) {
+                            var op = piece.location.getOppositeAdjacentPoint(adj[i]);
 
-                        if (op === false) {
-                            continue;
-                        }
-                        else if (( this.pieceAtPoint(op) && (this.pieceAtPoint(op).color !== piece.color) ) || op.isCorner() || ( (piece.color === "black") && op.isCenter() ) || ( (piece.color === "white") && op.isCenter() && !this.pieceAtPoint(op) )) {
-                            return true;
-                        }
+                            if (op === false) {
+                                continue;
+                            }
+                            else if (
+                                ( this.pieceAtPoint(op) && (this.pieceAtPoint(op).color !== piece.color) ) ||
+                                op.isCorner() ||
+                                ( (piece.color === "black") && op.isCenter() ) ||
+                                ( (piece.color === "white") && op.isCenter() && !this.pieceAtPoint(op) )
+                                ) {
+                                    return true;
+                            }
                     }
 
                 }
             }
             else {
                 for (i = 0; i < adj.length; i++) {
-                    if (( this.pieceAtPoint(adj[i]) && this.pieceAtPoint(adj[i]).color !== piece.color ) || adj[i].isCorner() || adj[i].isCenter()) {
-                        continue;
+                    if (
+                        ( this.pieceAtPoint(adj[i]) && this.pieceAtPoint(adj[i]).color !== piece.color ) ||
+                        adj[i].isCorner() ||
+                        adj[i].isCenter()
+                        ) {
+                            continue;
                     }
                     else {
                         return false;
@@ -427,12 +435,10 @@ function Game(display, sound, doneCallback) {
     this.display.board = this.board;
 
     this.sound = sound;
-    this.whitePlayer = new HumanPlayer("white");
-    this.blackPlayer = new HumanPlayer("black");
     this.done = doneCallback;
 
     this.gameId = null;
-    this.host = null;
+    this.performLocalProcessing = true;
 
     this.winner = null;
     this.whiteMove = true;
@@ -441,20 +447,20 @@ function Game(display, sound, doneCallback) {
     this.tick = function () {
         if (this.board.checkForTakenPieces().length > 0) {
             this.board.removePieces(this.board.checkForTakenPieces());
-            this.sound.pieceTaken();
+
+            if (this.performLocalProcessing) {
+                saveGame(this);
+                this.sound.pieceTaken();
+            }
         }
 
         if (this.board.checkForVictory()) {
-            if (this.board.checkForVictory() === "white") {
-                this.winner = this.whitePlayer;
-            }
-            else {
-                this.winner = this.blackPlayer;
-            }
+            this.winner = this.board.checkForVictory();
 
-            this.sound.victory();
-
-            this.done(this);
+            if (this.performLocalProcessing) {
+                this.sound.victory();
+                this.done(this);
+            }
         }
     };
 
@@ -475,10 +481,7 @@ function Game(display, sound, doneCallback) {
             return false;
         }
 
-        if (this.gameId) {
-            //TODO: SEND MOVE TO SERVER AND RETURN TRUE IF IT WORKED
-        }
-        else {
+        if (this.performLocalProcessing) {
             for (var i = 0; i < this.board.pieces.length; i++) {
                 this.board.pieces[i].lastMovedPiece = false;
             }
@@ -492,6 +495,8 @@ function Game(display, sound, doneCallback) {
             this.turnCount++;
 
             saveGame(mainGame);
+        } else {
+            //TODO: SEND MOVE TO SERVER AND RETURN TRUE IF IT WORKED
         }
 
         return true;
@@ -510,10 +515,9 @@ function Game(display, sound, doneCallback) {
             }
         };
 
-        if (this.gameId) {
+        if (!this.performLocalProcessing) {
             //TODO: GET NEW DATA FROM SERVER
 
-            update(this);
         }
 
         update(this);
@@ -521,12 +525,12 @@ function Game(display, sound, doneCallback) {
 
     this.setHotSeat = function () {
         this.gameId = null;
-        this.host = null;
+        this.performLocalProcessing = true;
     };
 
-    this.setNetwork = function (gameId, host) {
+    this.setNetwork = function (gameId) {
         this.gameId = gameId;
-        this.host = host;
+        this.performLocalProcessing = false;
     };
 
     this.toJSONString = function () {

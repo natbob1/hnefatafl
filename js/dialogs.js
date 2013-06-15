@@ -58,7 +58,7 @@ function networkGameCodeDialog() {
 }
 
 function doneDialog(game) {
-    $("#winText").html("Winner is the " + game.winner.color + " player!");
+    $("#winText").html("Winner is the " + game.winner + " player!");
     $("#done-dialog").dialog({
         modal: true,
         dialogClass: "no-close",
