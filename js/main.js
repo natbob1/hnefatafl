@@ -494,10 +494,11 @@ function Game(display, sound, doneCallback) {
             for (var i = 0; i < this.board.pieces.length; i++) {
                 this.board.pieces[i].lastMovedPiece = false;
             }
+            var pieceOnBoard = this.board.pieceWithId(move.piece.id); //TODO: Assumes the user hasn't tampered with the id (network game)
 
-            move.piece.location = move.endLocation;
+            pieceOnBoard.location = move.endLocation;
 
-            move.piece.lastMovedPiece = true;
+            pieceOnBoard.lastMovedPiece = true;
 
             this.whiteMove = !this.whiteMove;
 
