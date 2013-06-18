@@ -45,9 +45,10 @@ function newHotSeatGame() {
 }
 
 function newNetworkGame() {
-    $.getJSON("getCode.json").done(function (data) {
-        console.log(data);
-        //mainGame.setNetwork(data.gameId, true);
+    $.getJSON("/api/newGame.json", {
+        color: "white"
+    }).done(function (data) {
+        mainGame.setNetwork("white", data.code);
+        networkGameCodeDialog();
     });
-
 }

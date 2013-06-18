@@ -1,4 +1,3 @@
-//  http://blog.modulus.io/nodejs-and-express-sessions
 //  JSON.stringify(mainGame.board)
 
 var express = require('express');
@@ -49,7 +48,8 @@ app.get('/api/newGame.json', function(request, response) {
 	});
 
 	response.send({
-		code: gameId
+		code: gameId,
+        color: request.query.color
 	});
 });
 
@@ -86,6 +86,7 @@ app.get('/api/joinGame.json', function(request, response) {
 						});
 
 						response.send({
+                            code: request.query.gameId,
 							color: color
 						})
 					});
@@ -130,17 +131,15 @@ app.get('/api/getGame.json', function(request, response) {
 		response.send(500);
 	}
 
-	client.collection('games', function(err, collection) {
-		loadGameFromDatabase(request.query.gameId, function(game) {
-			response.send({
-				game: JSON.parse(game.toJSONString())
-			});
-		});
-	});
+    loadGameFromDatabase(request.query.gameId, function(game) {
+        response.send({
+            game: JSON.parse(game.toJSONString())
+        });
+    });
 });
 
 app.get('*', function(request, response) {
 	response.send(404);
-})
+});
 
-app.listen(8010);
+app.listen(process.env.PORT || 8000);

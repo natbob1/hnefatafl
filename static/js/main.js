@@ -448,6 +448,7 @@ function Game(display, sound, doneCallback) {
 
     this.performLocalProcessing = true;
     this.isClient = true;
+    this.networkColor = null;
     this.networkGameId = null;
 
     this.winner = null;
@@ -536,7 +537,8 @@ function Game(display, sound, doneCallback) {
         this.performLocalProcessing = true;
     };
 
-    this.setNetwork = function (gameId) {
+    this.setNetwork = function (color, gameId) {
+        this.color = color;
         this.gameId = gameId;
         this.performLocalProcessing = false;
     };

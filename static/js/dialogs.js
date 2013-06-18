@@ -34,10 +34,9 @@ function newGameDialog() {
 }
 
 function networkGameCodeDialog() {
-    newNetworkGame();
     $("#gameCode").val(mainGame.gameId);
 
-    $("#networkGameCode input[type=text]").click(function() {
+    $("#networkGameCode > input").click(function() {
         $(this).select();
     });
 
