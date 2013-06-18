@@ -1,11 +1,3 @@
-/*module.exports = {
-    Piece: Piece,
-    Move: Move,
-    Point: Point,
-    Board: Board,
-    Game: Game
-};*/
-
 //TODO: Write Unit Tests for Board, Game?, & Display?
 //TODO: Move backend to Node.js and add Multiplayer functionality
 
@@ -20,7 +12,20 @@ function Piece(id, color, isQueen, location) {
 function Move(piece, endLocation) {
     this.piece = piece;
     this.endLocation = endLocation;
+
+    this.toJSONString = function () {
+        return JSON.stringify(this);
+    };
 }
+
+Move.fromJSONString = function (moveJSONString) {
+    var moveJSON = JSON.parse(moveJSONString);
+
+    var piece = new Piece(moveJSON.piece.id, moveJSON.piece.color, moveJSON.piece.isQueen, new Point(moveJSON.piece.location.x, moveJSON.piece.location.y));
+    var endLocation = new Point(moveJSON.endLocation.x, moveJSON.endLocation.y);
+
+    return new Move(piece, endLocation);
+};
 
 function Point(x, y) {
     this.x = x;
@@ -434,7 +439,9 @@ function Sound(victoryElement, pieceTakenElement) {
 function Game(display, sound, doneCallback) {
     this.board = new Board();
     this.display = display;
-    this.display.board = this.board;
+    if (this.display) {
+        this.display.board = this.board;
+    }
 
     this.sound = sound;
     this.done = doneCallback;
@@ -451,13 +458,8 @@ function Game(display, sound, doneCallback) {
         if (this.board.checkForTakenPieces().length > 0) {
             this.board.removePieces(this.board.checkForTakenPieces());
 
-            if (this.performLocalProcessing) {
-                if (!this.networkGameId) {
-                    saveGame(this);
-                }
-                if (this.isClient) {
-                    this.sound.pieceTaken();
-                }
+            if (this.isClient) {
+                this.sound.pieceTaken();
             }
         }
 
@@ -500,8 +502,6 @@ function Game(display, sound, doneCallback) {
             this.whiteMove = !this.whiteMove;
 
             this.turnCount++;
-
-            saveGame(mainGame);
         } else {
             //TODO: SEND MOVE TO SERVER AND RETURN TRUE IF IT WORKED
         }
@@ -562,3 +562,12 @@ function Game(display, sound, doneCallback) {
         }
     };
 }
+
+var module = module || {}
+module.exports = {
+    Piece: Piece,
+    Move: Move,
+    Point: Point,
+    Board: Board,
+    Game: Game
+};

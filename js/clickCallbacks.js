@@ -15,6 +15,7 @@ function setupClickCallbacks() {
             }
 
             mainGame.display.update();
+            return true;
         }
         else {
             var newLocation = mainGame.display.pointAtElement(this);
@@ -42,6 +43,7 @@ function setupClickCallbacks() {
             mainGame.display.clickedPiece = null;
             mainGame.tick();
             mainGame.updateView();
+            saveGame(mainGame);
             return true;
         }
     });
