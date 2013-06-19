@@ -48,7 +48,7 @@ function newNetworkGame() {
     $.getJSON("/api/newGame.json", {
         color: "white"
     }).done(function (data) {
-        mainGame.setNetwork("white", data.code);
-        networkGameCodeDialog();
-    });
+            mainGame.setNetwork("white", data.code);
+            networkGameCodeDialog();
+        });
 }

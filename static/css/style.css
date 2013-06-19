@@ -128,6 +128,7 @@ h1 {
 #networkGameCode {
     width: 500px;
 }
+
 #networkGameCode input {
     padding: 5px;
     text-align: center;
@@ -187,7 +188,7 @@ h1 {
 }
 
 .introjs-tooltiptext {
-    font-family: 'Tauri', Verdana;
+    font-family: 'Tauri', Verdana, sans-serif;
 }
 
 .introjs-helperLayer {

@@ -162,7 +162,7 @@ function Board() {
     this.canMoveTo = function (piece, point) {
         var i;
 
-        if ( piece.location.isEqual(point) || !point.isValid() || ( ( point.isCorner() || point.isCenter() ) && !piece.isQueen ) ) {
+        if (piece.location.isEqual(point) || !point.isValid() || ( ( point.isCorner() || point.isCenter() ) && !piece.isQueen )) {
             return false;
         }
 
@@ -241,22 +241,22 @@ function Board() {
                 for (i = 0; i < adj.length; i++) {
                     if (
                         this.pieceAtPoint(adj[i]) &&
-                        (this.pieceAtPoint(adj[i]).color !== piece.color) &&
-                        this.pieceAtPoint(adj[i]).lastMovedPiece
+                            (this.pieceAtPoint(adj[i]).color !== piece.color) &&
+                            this.pieceAtPoint(adj[i]).lastMovedPiece
                         ) {
-                            var op = piece.location.getOppositeAdjacentPoint(adj[i]);
+                        var op = piece.location.getOppositeAdjacentPoint(adj[i]);
 
-                            if (op === false) {
-                                continue;
-                            }
-                            else if (
-                                ( this.pieceAtPoint(op) && (this.pieceAtPoint(op).color !== piece.color) ) ||
+                        if (op === false) {
+                            continue;
+                        }
+                        else if (
+                            ( this.pieceAtPoint(op) && (this.pieceAtPoint(op).color !== piece.color) ) ||
                                 op.isCorner() ||
                                 ( (piece.color === "black") && op.isCenter() ) ||
                                 ( (piece.color === "white") && op.isCenter() && !this.pieceAtPoint(op) )
-                                ) {
-                                    return true;
-                            }
+                            ) {
+                            return true;
+                        }
                     }
 
                 }
@@ -265,10 +265,10 @@ function Board() {
                 for (i = 0; i < adj.length; i++) {
                     if (
                         ( this.pieceAtPoint(adj[i]) && this.pieceAtPoint(adj[i]).color !== piece.color ) ||
-                        adj[i].isCorner() ||
-                        adj[i].isCenter()
+                            adj[i].isCorner() ||
+                            adj[i].isCenter()
                         ) {
-                            continue;
+                        continue;
                     }
                     else {
                         return false;
@@ -566,7 +566,7 @@ function Game(display, sound, doneCallback) {
     };
 }
 
-var module = module || {}
+var module = module || {};
 module.exports = {
     Piece: Piece,
     Move: Move,

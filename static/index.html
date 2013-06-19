@@ -9,9 +9,11 @@
     <script type="text/javascript" src="js/libs/jquery.simplemodal.1.4.4.min.js"></script>
 
     <!-- External CSS -->
-    <link href='http://fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'/>
+    <link href='http://fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic'
+          rel='stylesheet' type='text/css'/>
     <link href='http://fonts.googleapis.com/css?family=Tauri' rel='stylesheet' type='text/css'>
-    <link href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/redmond/jquery-ui.css' rel='stylesheet' type='text/css'/>
+    <link href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/redmond/jquery-ui.css'
+          rel='stylesheet' type='text/css'/>
     <link href="css/libs/introjs.css" rel="stylesheet" type="text/css"/>
 
     <!-- Internal Javascript -->
@@ -43,7 +45,9 @@
 
 <div class="hidden" id="splash">
     <h2>Welcome to</h2>
+
     <h1>Hnefatafl</h1>
+
     <div class="buttons">
         <a class="splashClose" id="playGameButton">Play Game</a>
         <a class="splashClose" id="instructionsButton">Instructions</a>
@@ -51,6 +55,7 @@
 </div>
 <div class="hidden" id="newGame">
     <h2>Select a game mode:</h2>
+
     <div class="buttons">
         <a class="splashClose" id="hotSeatGame">Hot Seat Game</a>
         <a class="splashClose" id="networkGame">Network Game</a>
@@ -58,6 +63,7 @@
 </div>
 <div class="hidden" id="networkGameCode">
     <h2><label for="gameCode">Game code:</label></h2>
+
     <div class="buttons">
         <input id="gameCode" type="text" readonly/>
         <a class="splashClose">OK</a>
@@ -109,7 +115,9 @@
 
         $("#newGameButton").click(newGameDialog);
         $("#hotSeatGame").click(newHotSeatGame);
-        $("#networkGame").click(function () {setTimeout(newNetworkGame, 450)});
+        $("#networkGame").click(function () {
+            setTimeout(newNetworkGame, 450)
+        });
 
         $(".splashClose").click(function () {
             $.modal.close()
