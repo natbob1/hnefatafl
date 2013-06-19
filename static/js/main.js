@@ -1,5 +1,7 @@
 //TODO: Write Unit Tests for Board, Game?, & Display?
 //TODO: Move backend to Node.js and add Multiplayer functionality
+//TODO: Network game state is saved to local storage
+//TODO: Replace jQueryUI with other modals
 
 function Piece(id, color, isQueen, location) {
     this.id = id;
@@ -506,6 +508,11 @@ function Game(display, sound, doneCallback) {
             this.turnCount++;
         } else {
             //TODO: SEND MOVE TO SERVER AND RETURN TRUE IF IT WORKED
+
+            $.getJSON("/api/postMove.json", {
+                gameId: this.gameId,
+                move: move.toJSONString()
+            });
         }
 
         return true;
@@ -525,8 +532,6 @@ function Game(display, sound, doneCallback) {
         };
 
         if (!this.performLocalProcessing) {
-            //TODO: GET NEW DATA FROM SERVER
-
             $.getJSON("/api/getGame.json", {
                 gameId: this.gameId
             }).done((function (game) {
