@@ -1,9 +1,9 @@
 //TODO: Write Unit Tests for Board, Game?, & Display?
-//TODO: Network game state is saved to local storage
 //TODO: Replace jQueryUI with other modals
-//TODO: Set playerId cookie
-//TODO: Piece takes over the network are broken
 //TODO: Update dialogs so that you can join a network game
+//TODO: Add a longpolling page and use it for game updates
+//TODO: Add a sound effects queue to Game to allow network games to get effects from the server
+//TODO: Add ability to specify what color you want in a new game
 
 function Piece(id, color, isQueen, location) {
     this.id = id;
@@ -471,7 +471,7 @@ function Game(display, sound, doneCallback) {
         if (this.board.checkForVictory()) {
             this.winner = this.board.checkForVictory();
 
-            if (this.performLocalProcessing) {
+            if (this.isClient) {
                 this.sound.victory();
                 this.done(this);
             }

@@ -109,6 +109,8 @@ app.get('/api/postMove.json', function (request, response) {
             var move = hnefatafl.Move.fromJSONString(request.query.move);
 
             if (game.executeMove(move)) { //TODO: examine whether executeMove allows bad moves through
+                game.tick();
+
                 collection.update({
                     _id: new mongodb.ObjectID(request.query.gameId)
                 }, {
