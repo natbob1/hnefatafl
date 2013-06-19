@@ -6,6 +6,7 @@
 //TODO: Add ability to specify what color you want in a new game
 //TODO: Change .toJSONString methods to work directly with JSON (not strings)
 //TODO: Write a Network class to factor all AJAX out of Game
+//TODO: Add indicator for Game.color
 
 function Piece(id, color, isQueen, location) {
     this.id = id;

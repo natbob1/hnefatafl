@@ -60,6 +60,10 @@
         <a class="splashClose" id="hotSeatGame">Hot Seat Game</a>
         <a class="splashClose" id="networkGame">Network Game</a>
     </div>
+    <div class="buttons">
+        <a class="splashClose" id="joinGameButton">Join Network Game</a>
+        <a class="splashClose" id="getCodeButton">Get Current Code</a>
+    </div>
 </div>
 <div class="hidden dialog" id="networkGameCode">
     <h2><label for="gameCode">Game code:</label></h2>
@@ -124,11 +128,17 @@
         $("#newGameButton").click(newGameDialog);
         $("#hotSeatGame").click(newHotSeatGame);
         $("#networkGame").click(function () {
-            setTimeout(newNetworkGame, 450)
+            setTimeout(newNetworkGame, 450);
+        });
+        $("#joinGameButton").click(function () {
+            setTimeout(joinNetworkGameDialog, 450);
+        });
+        $("#getCodeButton").click(function () {
+            setTimeout(networkGameCodeDialog, 450);
         });
 
         $(".splashClose").click(function () {
-            $.modal.close()
+            $.modal.close();
         });
 
         splashDialog();
