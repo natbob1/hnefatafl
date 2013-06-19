@@ -1,7 +1,9 @@
 //TODO: Write Unit Tests for Board, Game?, & Display?
-//TODO: Move backend to Node.js and add Multiplayer functionality
 //TODO: Network game state is saved to local storage
 //TODO: Replace jQueryUI with other modals
+//TODO: Set playerId cookie
+//TODO: Piece takes over the network are broken
+//TODO: Update dialogs so that you can join a network game
 
 function Piece(id, color, isQueen, location) {
     this.id = id;
@@ -507,8 +509,6 @@ function Game(display, sound, doneCallback) {
 
             this.turnCount++;
         } else {
-            //TODO: SEND MOVE TO SERVER AND RETURN TRUE IF IT WORKED
-
             $.getJSON("/api/postMove.json", {
                 gameId: this.gameId,
                 move: move.toJSONString()

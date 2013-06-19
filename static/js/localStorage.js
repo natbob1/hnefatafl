@@ -50,5 +50,13 @@ function newNetworkGame() {
     }).done(function (data) {
             mainGame.setNetwork("white", data.code);
             networkGameCodeDialog();
-        });
+    });
+}
+
+function joinNetworkGame(gameId) {
+    $.getJSON("/api/joinGame.json", {
+        gameId: gameId
+    }).done(function (data) {
+            mainGame.setNetwork(data.color, data.code);
+    });
 }

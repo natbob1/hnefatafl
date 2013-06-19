@@ -1,4 +1,9 @@
 /* Global styles */
+* {
+	margin: 0;
+	padding: 0;
+}
+
 body {
     background: url('img/mochaGrunge.png');
 
@@ -117,6 +122,14 @@ h1 {
     display: none;
 }
 
+.dialog input {
+    padding: 5px;
+    text-align: center;
+    font-family: Courier, monospace;
+    font-size: 16pt;
+    width: 350px;
+}
+
 #splash {
     width: 430px;
 }
@@ -129,12 +142,8 @@ h1 {
     width: 500px;
 }
 
-#networkGameCode input {
-    padding: 5px;
-    text-align: center;
-    font-family: Courier, monospace;
-    font-size: 16pt;
-    width: 350px;
+#joinNetworkGame {
+    width: 600px;
 }
 
 /* SimpleModal Styles */

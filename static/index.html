@@ -43,7 +43,7 @@
 
 <!-- Dialogs -->
 
-<div class="hidden" id="splash">
+<div class="hidden dialog" id="splash">
     <h2>Welcome to</h2>
 
     <h1>Hnefatafl</h1>
@@ -53,7 +53,7 @@
         <a class="splashClose" id="instructionsButton">Instructions</a>
     </div>
 </div>
-<div class="hidden" id="newGame">
+<div class="hidden dialog" id="newGame">
     <h2>Select a game mode:</h2>
 
     <div class="buttons">
@@ -61,12 +61,20 @@
         <a class="splashClose" id="networkGame">Network Game</a>
     </div>
 </div>
-<div class="hidden" id="networkGameCode">
+<div class="hidden dialog" id="networkGameCode">
     <h2><label for="gameCode">Game code:</label></h2>
 
     <div class="buttons">
         <input id="gameCode" type="text" readonly/>
         <a class="splashClose">OK</a>
+    </div>
+</div>
+<div class="hidden dialog" id="joinNetworkGame">
+    <h2><label for="gameCode">Enter game code:</label></h2>
+
+    <div class="buttons">
+        <input id="joinCode" type="text"/>
+        <a id="joinNetworkButton" class="splashClose">Join Game</a>
     </div>
 </div>
 <div id="done-dialog" class="ui-dialog" title="Game Over!">
