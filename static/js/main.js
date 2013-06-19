@@ -527,9 +527,18 @@ function Game(display, sound, doneCallback) {
         if (!this.performLocalProcessing) {
             //TODO: GET NEW DATA FROM SERVER
 
+            $.getJSON("/api/getGame.json", {
+                gameId: this.gameId
+            }).done((function (game) {
+                return function(data) {
+                    game.fromJSONString(JSON.stringify(data));
+                    update(game);
+                }
+            })(this));
         }
-
-        update(this);
+        else {
+            update(this);
+        }
     };
 
     this.setHotSeat = function () {

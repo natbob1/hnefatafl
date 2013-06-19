@@ -133,9 +133,7 @@ app.get('/api/getGame.json', function (request, response) {
     }
 
     loadGameFromDatabase(request.query.gameId, function (game) {
-        response.send({
-            game: JSON.parse(game.toJSONString())
-        });
+        response.send(JSON.parse(game.toJSONString()));
     });
 });
 
