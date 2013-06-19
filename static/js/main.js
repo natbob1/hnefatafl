@@ -4,6 +4,8 @@
 //TODO: Add a longpolling page and use it for game updates
 //TODO: Add a sound effects queue to Game to allow network games to get effects from the server
 //TODO: Add ability to specify what color you want in a new game
+//TODO: Change .toJSONString methods to work directly with JSON (not strings)
+//TODO: Write a Network class to factor all AJAX out of Game
 
 function Piece(id, color, isQueen, location) {
     this.id = id;
@@ -12,6 +14,7 @@ function Piece(id, color, isQueen, location) {
     this.location = location;
     this.lastMovedPiece = false;
 }
+
 
 function Move(piece, endLocation) {
     this.piece = piece;
@@ -30,6 +33,7 @@ Move.fromJSONString = function (moveJSONString) {
 
     return new Move(piece, endLocation);
 };
+
 
 function Point(x, y) {
     this.x = x;
@@ -107,6 +111,7 @@ function Point(x, y) {
         return (this.x === otherPoint.x) && (this.y === otherPoint.y)
     };
 }
+
 
 function Board() {
     this.pieces = [];
@@ -301,6 +306,7 @@ function Board() {
     this.setupPieces();
 }
 
+
 function Display(boardElement, turnElement, turnCountElement) {
     this.boardElement = boardElement;
     this.playerTurnDisplayElement = turnElement;
@@ -427,6 +433,7 @@ function Display(boardElement, turnElement, turnCountElement) {
     this.setup();
 }
 
+
 function Sound(victoryElement, pieceTakenElement) {
     this.victoryElement = victoryElement;
     this.pieceTakenElement = pieceTakenElement;
@@ -440,6 +447,7 @@ function Sound(victoryElement, pieceTakenElement) {
     };
 }
 
+
 function Game(display, sound, doneCallback) {
     this.board = new Board();
     this.display = display;
@@ -452,8 +460,8 @@ function Game(display, sound, doneCallback) {
 
     this.performLocalProcessing = true;
     this.isClient = true;
-    this.networkColor = null;
-    this.networkGameId = null;
+    this.color = null;
+    this.gameId = null;
 
     this.winner = null;
     this.whiteMove = true;
@@ -547,6 +555,7 @@ function Game(display, sound, doneCallback) {
     };
 
     this.setHotSeat = function () {
+        this.color = null;
         this.gameId = null;
         this.performLocalProcessing = true;
     };
@@ -579,6 +588,7 @@ function Game(display, sound, doneCallback) {
         }
     };
 }
+
 
 var module = module || {};
 module.exports = {

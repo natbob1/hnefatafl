@@ -1,5 +1,3 @@
-//  JSON.stringify(mainGame.board)
-
 var express = require('express');
 var mongodb = require('mongodb');
 var hnefatafl = require('./static/js/main');
@@ -7,7 +5,6 @@ var hnefatafl = require('./static/js/main');
 function loadGameFromDatabase(gameId, callback) {
     var game = new hnefatafl.Game(null, null, null);
     game.isClient = false;
-
 
     client.collection('games', function (err, collection) {
         collection.findOne({_id: new mongodb.ObjectID(gameId)}, function (err, doc) {
