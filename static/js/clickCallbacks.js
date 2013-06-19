@@ -6,15 +6,24 @@ function setupClickCallbacks() {
         if (!mainGame.display.clickedPiece) {
             mainGame.display.clickedPiece = mainGame.board.pieceAtPoint(mainGame.display.pointAtElement(this));
 
-            if (!(mainGame.display.clickedPiece.color === "white") === mainGame.whiteMove) { //User clicked on the other player's piece
-                mainGame.display.clickedPiece = null;
+            if (mainGame.performLocalProcessing) {
+                if (!(mainGame.display.clickedPiece.color === "white") === mainGame.whiteMove) { //User clicked on the other player's piece
+                    mainGame.display.clickedPiece = null;
 
-                //TODO: SAY IT'S NOT YOUR TURN IF IT IS A NETWORK GAME
-                invalidMoveDialog("That's not your piece!");
-                return false;
+                    invalidMoveDialog("That's not your piece!");
+                    return false;
+                }
+            }
+            else {
+                if (mainGame.display.clickedPiece.color !== mainGame.color) {
+                    mainGame.display.clickedPiece = null;
+                    
+                    invalidMoveDialog("It's not your turn!");
+                    return false;
+                }
             }
 
-            mainGame.display.update();
+            mainGame.updateView();
             return true;
         }
         else {
