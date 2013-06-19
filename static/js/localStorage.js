@@ -25,6 +25,10 @@ function loadGame(game) {
 }
 
 function initialGameSetup() {
+    if (document.cookie.replace(/(?:(?:^|.*;\s*)playerId\s*\=\s*([^;]*).*$)|^.*$/, "$1") === "") {
+        document.cookie = "playerId=" + new Date().getTime().toString(32) + Math.random().toString(32);
+    }
+
     mainGame = new Game(
         new Display($("#board")[0], $("#playerTurn")[0], $("#turnCount")[0]),
         new Sound($("#victoryEffect")[0], $("#takenEffect")[0]),
