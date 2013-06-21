@@ -1,15 +1,10 @@
 //TODO: Write Unit Tests for Board, Game?, & Display?
-//TODO: Replace jQueryUI with other modals
-//TODO: Update dialogs so that you can join a network game
-//TODO: Add a sound effects queue to Game to allow network games to get effects from the server
-//TODO: Add ability to specify what color you want in a new game
 //TODO: Change .toJSONString methods to work directly with JSON (not strings)
 //TODO: Write a Network class to factor all AJAX out of Game
+//TODO: Replace jQueryUI with other modals
+//TODO: Add ability to specify what color you want in a new game
+//TODO: Add a sound effects queue to Game to allow network games to get effects from the server
 //TODO: Add indicator for Game.color
-
-//TODO: Display issues in network games
-//TODO: Make sure updateView() does not change the screen (it flickers the possible move indicators
-//TODO: Network game state is saved to localStorage
 //TODO: Join game should allow people to join games of which they were already a part
 
 

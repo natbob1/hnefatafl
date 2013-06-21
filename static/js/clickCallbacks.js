@@ -2,12 +2,21 @@ function setupClickCallbacks() {
     mainGame.display.clickedPiece = null;
 
     $("#board").find("div").on("click", function () {
-
         if (!mainGame.display.clickedPiece) {
             mainGame.display.clickedPiece = mainGame.board.pieceAtPoint(mainGame.display.pointAtElement(this));
 
-            if (!(mainGame.display.clickedPiece.color === "white") === mainGame.whiteMove) { //User clicked on the other player's piece
+            if (!mainGame.performLocalProcessing) {
+                if (mainGame.display.clickedPiece.color !== mainGame.color) { //You clicked on the other player's piece
+                    mainGame.display.clickedPiece = null;
+
+                    invalidMoveDialog("That's not your piece!");
+                    return false;
+                }
+            }
+
+            if (!(mainGame.display.clickedPiece.color === "white") === mainGame.whiteMove) { //User clicked on a piece which is not allowed to move
                 mainGame.display.clickedPiece = null;
+
                 if (mainGame.performLocalProcessing) {
                     invalidMoveDialog("That's not your piece!");
                 }
@@ -15,15 +24,6 @@ function setupClickCallbacks() {
                     invalidMoveDialog("It's not your turn!");
                 }
                 return false;
-            }
-
-            if (!mainGame.performLocalProcessing) {
-                if (mainGame.display.clickedPiece.color !== mainGame.color) {
-                    mainGame.display.clickedPiece = null;
-
-                    invalidMoveDialog("It's not your turn!");
-                    return false;
-                }
             }
 
             mainGame.updateView();
@@ -55,7 +55,9 @@ function setupClickCallbacks() {
             mainGame.display.clickedPiece = null;
             mainGame.tick();
             mainGame.updateView();
-            saveGame(mainGame);
+            if (mainGame.performLocalProcessing) {
+                saveGame(mainGame);
+            }
             return true;
         }
     });
