@@ -53,6 +53,7 @@ function newNetworkGame() {
         color: "white"
     }).done(function (data) {
             mainGame.setNetwork("white", data.code);
+            mainGame.updateView();
             networkGameCodeDialog();
     });
 }
@@ -62,5 +63,6 @@ function joinNetworkGame(gameId) {
         gameId: gameId
     }).done(function (data) {
             mainGame.setNetwork(data.color, data.code);
+            mainGame.updateView();
     });
 }

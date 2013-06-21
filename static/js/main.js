@@ -1,12 +1,17 @@
 //TODO: Write Unit Tests for Board, Game?, & Display?
 //TODO: Replace jQueryUI with other modals
 //TODO: Update dialogs so that you can join a network game
-//TODO: Add a longpolling page and use it for game updates
 //TODO: Add a sound effects queue to Game to allow network games to get effects from the server
 //TODO: Add ability to specify what color you want in a new game
 //TODO: Change .toJSONString methods to work directly with JSON (not strings)
 //TODO: Write a Network class to factor all AJAX out of Game
 //TODO: Add indicator for Game.color
+
+//TODO: Display issues in network games
+//TODO: Make sure updateView() does not change the screen (it flickers the possible move indicators
+//TODO: Network game state is saved to localStorage
+//TODO: Join game should allow people to join games of which they were already a part
+
 
 function Piece(id, color, isQueen, location) {
     this.id = id;
@@ -528,7 +533,9 @@ function Game(display, sound, doneCallback) {
     };
 
     this.updateView = function () {
+        console.log("Update View Called.");
         var update = function (game) {
+            console.log(game);
             game.display.update();
             game.display.updateTurnCountDisplay(game.turnCount);
 
@@ -540,18 +547,29 @@ function Game(display, sound, doneCallback) {
             }
         };
 
+        update(this);
+
         if (!this.performLocalProcessing) {
             $.getJSON("/api/getGame.json", {
                 gameId: this.gameId
-            }).done((function (game) {
+            })
+            .done((function (game) {
                 return function(data) {
+                    console.log("Callback:");
+                    console.log(data);
                     game.fromJSONString(JSON.stringify(data));
-                    update(game);
+                    console.log("Setting Callback");
+                    setTimeout.call(game, game.updateView, 100);
+                }
+            })(this))
+            .error((function (game) {
+                return function(data) {
+                    console.log("Callback:");
+                    console.log(data);
+                    console.log("Setting Callback");
+                    setTimeout.call(game, game.updateView, 100);
                 }
             })(this));
-        }
-        else {
-            update(this);
         }
     };
 
