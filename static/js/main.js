@@ -364,67 +364,96 @@ function Display(boardElement, turnElement, turnCountElement) {
 
     this.update = function () {
         var squares = $(this.boardElement).children();
-        var ins = [];
-        var outs = [];
-        var crosses = [];
-        var i;
+        var pieceIns = [];
+        var pieceOuts = [];
+        var pieceCrosses = [];
+        var possibleIns = [];
+        var possibleOuts = [];
+        var i, j;
+        var allPossible;
+
+        if (this.clickedPiece) {
+            allPossible = this.board.allValidMoveLocations(this.clickedPiece);
+        } else {
+            allPossible = [];
+        }
+
 
         for (i = 0; i < squares.length; i++) {
-            var view = this.isPieceAtElement(squares[i]); //Represents the previous state of the board
-            var model = this.board.pieceAtPoint(this.pointAtElement(squares[i])); //Represents the new state of the board
+            var pieceView = this.isPieceAtElement(squares[i]); //Represents the previous state of the board
+            var pieceModel = this.board.pieceAtPoint(this.pointAtElement(squares[i])); //Represents the new state of the board
 
-            if (model && !view) { //Locations which previously were empty, but now have a piece
-                ins.push(this.pointAtElement(squares[i]));
+            if (pieceModel && !pieceView) { //Locations which previously were empty, but now have a piece
+                pieceIns.push(this.pointAtElement(squares[i]));
             }
-            else if (!model && view) { //Locations which previously were occupied, but now are empty
-                outs.push(this.pointAtElement(squares[i]));
+            else if (!pieceModel && pieceView) { //Locations which previously were occupied, but now are empty
+                pieceOuts.push(this.pointAtElement(squares[i]));
             }
-            else if (model && view) { //Locations which previously were occupied, but now are occupied with a different type of pieces
-                if (!$(squares[i]).hasClass(this.classForPiece(model))) {
-                    crosses.push(this.pointAtElement(squares[i]));
+            else if (pieceModel && pieceView) { //Locations which previously were occupied, but now are occupied with a different type of pieces
+                if (!$(squares[i]).hasClass(this.classForPiece(pieceModel))) {
+                    pieceCrosses.push(this.pointAtElement(squares[i]));
                 }
+            }
+
+            var possibleView = $(squares[i]).hasClass("possibleMove");
+            var possibleModel = false;
+
+            for (j = 0; j < allPossible.length; j++) {
+                if (allPossible[j].isEqual(this.pointAtElement(squares[i]))) {
+                    possibleModel = true;
+                }
+            }
+
+            if (possibleView && !possibleModel) {
+                possibleOuts.push(this.pointAtElement(squares[i]));
+            }
+            else if (!possibleView && possibleModel) {
+                possibleIns.push(this.pointAtElement(squares[i]));
             }
         }
 
-        for (i = 0; i < outs.length; i++) {
+        for (i = 0; i < pieceOuts.length; i++) {
             (function (elem) {
                 $(elem).fadeOut(400, function () {
                     $(elem).removeClass("white black queen");
                     $(elem).show();
                 });
-            })(this.elementAtPoint(outs[i]));
+            })(this.elementAtPoint(pieceOuts[i]));
         }
 
-        for (i = 0; i < ins.length; i++) {
+        for (i = 0; i < pieceIns.length; i++) {
             (function (elem, _class) {
                 $(elem).hide();
 
                 $(elem).addClass(_class);
 
                 $(elem).fadeIn(400);
-            })(this.elementAtPoint(ins[i]), this.classForPiece(this.board.pieceAtPoint(ins[i])));
+            })(this.elementAtPoint(pieceIns[i]), this.classForPiece(this.board.pieceAtPoint(pieceIns[i])));
         }
 
-        for (i = 0; i < crosses.length; i++) {
+        for (i = 0; i < pieceCrosses.length; i++) {
             (function (elem, _class) {
                 $(elem).fadeOut(200, function () {
                     $(elem).removeClass("white black queen");
                     $(elem).addClass(_class);
                     $(elem).fadeIn(200);
                 });
-            })(this.elementAtPoint(crosses[i]), this.classForPiece(this.board.pieceAtPoint(crosses[i])));
+            })(this.elementAtPoint(pieceCrosses[i]), this.classForPiece(this.board.pieceAtPoint(pieceCrosses[i])));
         }
 
-        $(squares).removeClass("possibleMove");
-        if (this.clickedPiece) {
-            var moveLocations = this.board.allValidMoveLocations(this.clickedPiece);
-            for (i = 0; i < moveLocations.length; i++) {
-                (function (elem) {
-                    $(elem).hide();
-                    $(elem).addClass("possibleMove");
-                    $(elem).fadeIn(200);
-                })(this.elementAtPoint(moveLocations[i]));
-            }
+
+        for (i = 0; i < possibleIns.length; i++) {
+            (function (elem) {
+                $(elem).hide();
+                $(elem).addClass("possibleMove");
+                $(elem).fadeIn(200);
+            })(this.elementAtPoint(possibleIns[i]));
+        }
+
+        for (i = 0; i < possibleOuts.length; i++) {
+            (function (elem) {
+                $(elem).removeClass("possibleMove");
+            })(this.elementAtPoint(possibleOuts[i]));
         }
     };
 
