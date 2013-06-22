@@ -16,10 +16,6 @@ function removeFromWaiting (item) {
     return false;
 }
 
-function databaseConnection(callback) {
-    mongodb.connect(process.env.MONGOLAB_URI || "mongodb://localhost:27017/hnefatafl?w=0", callback);
-}
-
 function loadGameFromDatabase(gameId, callback) {
     var game = new hnefatafl.Game(null, null, null);
     game.isClient = false;
