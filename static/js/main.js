@@ -468,6 +468,19 @@ function Display(boardElement, turnElement, turnCountElement) {
 function Sound(victoryElement, pieceTakenElement) {
     this.victoryElement = victoryElement;
     this.pieceTakenElement = pieceTakenElement;
+    this.queue = [];
+
+    this.playSounds = function () {
+        for (var i = 0; i < this.queue.length; i++) {
+            this.playSound(this.queue[i]);
+        }
+
+        this.queue = [];
+    };
+
+    this.playSound = function (soundName) {
+        this[soundName]();
+    };
 
     this.victory = function () {
         this.victoryElement.play();
@@ -488,6 +501,7 @@ function Game(display, sound, doneCallback) {
 
     this.sound = sound;
     this.done = doneCallback;
+    this.soundQueue = [];
 
     this.performLocalProcessing = true;
     this.isClient = true;
@@ -503,7 +517,7 @@ function Game(display, sound, doneCallback) {
             this.board.removePieces(this.board.checkForTakenPieces());
 
             if (this.isClient) {
-                this.sound.pieceTaken();
+                this.sound.queue.push("pieceTaken");
             }
         }
 
@@ -511,7 +525,7 @@ function Game(display, sound, doneCallback) {
             this.winner = this.board.checkForVictory();
 
             if (this.isClient) {
-                this.sound.victory();
+                this.sound.queue.push("victory");
                 this.done(this);
             }
         }
@@ -558,10 +572,9 @@ function Game(display, sound, doneCallback) {
     };
 
     this.updateView = function () {
-        console.log("Update View Called.");
         var update = function (game) {
-            console.log(game);
             game.display.update();
+            game.sound.playSounds();
             game.display.updateTurnCountDisplay(game.turnCount);
 
             if (game.whiteMove) {
