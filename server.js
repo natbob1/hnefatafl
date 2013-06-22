@@ -1,6 +1,7 @@
 var express = require('express');
 var mongodb = require('mongodb');
 var hnefatafl = require('./static/js/main');
+var connect = require('./connect');
 
 var waiting = [];
 
@@ -15,20 +16,23 @@ function removeFromWaiting (item) {
     return false;
 }
 
+function databaseConnection(callback) {
+    mongodb.connect(process.env.MONGOLAB_URI || "mongodb://localhost:27017/hnefatafl?w=0", callback);
+}
+
 function loadGameFromDatabase(gameId, callback) {
     var game = new hnefatafl.Game(null, null, null);
     game.isClient = false;
 
-    client.collection('games', function (err, collection) {
-        collection.findOne({_id: new mongodb.ObjectID(gameId)}, function (err, doc) {
-            game.fromJSONString(JSON.stringify(doc.game));
-            callback(game);
+    connect(function (client){
+        client.collection('games', function (err, collection) {
+            collection.findOne({_id: new mongodb.ObjectID(gameId)}, function (err, doc) {
+                game.fromJSONString(JSON.stringify(doc.game));
+                callback(game);
+            });
         });
     });
 }
-
-var client = new mongodb.Db('hnefatafl', new mongodb.Server('127.0.0.1', 27017, {}));
-client.open(function (err, db2) {});
 
 var app = express();
 app.use(express.cookieParser());
@@ -42,25 +46,27 @@ app.get('/api/newGame.json', function (request, response) {
         response.send(500);
     }
 
-    client.collection('games', function (err, collection) {
-        collection.insert({
-            _id: gameId,
-            game: JSON.parse(game.toJSONString())
-        });
-    });
-
-    client.collection('gamePlayers', function (err, collection) {
-        collection.insert({
-            gameId: gameId,
-            color: request.query.color,
-            playerId: request.cookies.playerId,
-            current: false
-        });
-    });
-
     response.send({
         code: gameId,
         color: request.query.color
+    });
+
+    connect(function (client) {
+        client.collection('games', function (err, collection) {
+            collection.insert({
+                _id: gameId,
+                game: JSON.parse(game.toJSONString())
+            });
+        });
+
+        client.collection('gamePlayers', function (err, collection) {
+            collection.insert({
+                gameId: gameId,
+                color: request.query.color,
+                playerId: request.cookies.playerId,
+                current: false
+            });
+        });
     });
 });
 
@@ -69,40 +75,42 @@ app.get('/api/joinGame.json', function (request, response) {
         response.send(500);
     }
 
-    client.collection('gamePlayers', function (err, collection) {
-        var gameId = new mongodb.ObjectID(request.query.gameId);
+    connect(function(client) {
+        client.collection('gamePlayers', function (err, collection) {
+            var gameId = new mongodb.ObjectID(request.query.gameId);
 
-        collection.find({
-            gameId: gameId
-        }, function (err, cursor) {
-            cursor.count(function (err, count) {
-                if (count !== 1) {
-                    response.send({
-                        color: null
-                    });
-                }
-                else {
-                    cursor.nextObject(function (err, document) {
-                        var color = null;
-                        if (document.color === "white") {
-                            color = "black";
-                        }
-                        else if (document.color === "black") {
-                            color = "white";
-                        }
-                        collection.insert({
-                            gameId: gameId,
-                            color: color,
-                            playerId: request.cookies.playerId,
-                            current: false
-                        });
-
+            collection.find({
+                gameId: gameId
+            }, function (err, cursor) {
+                cursor.count(function (err, count) {
+                    if (count !== 1) {
                         response.send({
-                            code: request.query.gameId,
-                            color: color
-                        })
-                    });
-                }
+                            color: null
+                        });
+                    }
+                    else {
+                        cursor.nextObject(function (err, document) {
+                            var color = null;
+                            if (document.color === "white") {
+                                color = "black";
+                            }
+                            else if (document.color === "black") {
+                                color = "white";
+                            }
+                            collection.insert({
+                                gameId: gameId,
+                                color: color,
+                                playerId: request.cookies.playerId,
+                                current: false
+                            });
+
+                            response.send({
+                                code: request.query.gameId,
+                                color: color
+                            })
+                        });
+                    }
+                });
             });
         });
     });
@@ -113,41 +121,43 @@ app.get('/api/postMove.json', function (request, response) {
         response.send(500);
     }
 
-    //TODO: Check whether the playerId ref in gamePlayers matches whiteMove
+    connect(function(client){
+        //TODO: Check whether the playerId ref in gamePlayers matches move.piece.color
 
-    client.collection('games', function (err, collection) {
-        loadGameFromDatabase(request.query.gameId, function (game) {
-            var move = hnefatafl.Move.fromJSONString(request.query.move);
+        client.collection('games', function (err, collection) {
+            loadGameFromDatabase(request.query.gameId, function (game) {
+                var move = hnefatafl.Move.fromJSONString(request.query.move);
 
-            if (game.executeMove(move)) { //TODO: examine whether executeMove allows bad moves through
-                game.tick();
+                if (game.executeMove(move)) { //TODO: examine whether executeMove allows bad moves through
+                    game.tick();
 
-                collection.update({
-                    _id: new mongodb.ObjectID(request.query.gameId)
-                }, {
-                    game: JSON.parse(game.toJSONString())
-                });
-
-                client.collection('gamePlayers', function (error, playerCollection) {
-                    playerCollection.update({
-                        gameId: new mongodb.ObjectID(request.query.gameId)
+                    collection.update({
+                        _id: new mongodb.ObjectID(request.query.gameId)
                     }, {
-                        $set: {
-                            current: false
-                        }
-                    }, {
-                        multi: true
+                        game: JSON.parse(game.toJSONString())
                     });
-                });
 
-                response.send({
-                    success: true
-                });
-            } else {
-                response.send({
-                    success: false
-                });
-            }
+                    client.collection('gamePlayers', function (error, playerCollection) {
+                        playerCollection.update({
+                            gameId: new mongodb.ObjectID(request.query.gameId)
+                        }, {
+                            $set: {
+                                current: false
+                            }
+                        }, {
+                            multi: true
+                        });
+                    });
+
+                    response.send({
+                        success: true
+                    });
+                } else {
+                    response.send({
+                        success: false
+                    });
+                }
+            });
         });
     });
 });
@@ -182,40 +192,41 @@ setInterval(function () {
             break;
         }
 
-        client.collection('gamePlayers', (function (item) {
-            return function (err, collection) {
-                var gameId = new mongodb.ObjectID(item.request.query.gameId);
+        connect((function (item) {
+            return function(client) {
+                client.collection('gamePlayers', function (err, collection) {
+                    var gameId = new mongodb.ObjectID(item.request.query.gameId);
 
-                collection.find({
-                    gameId: gameId,
-                    playerId: item.request.cookies.playerId,
-                    current: false
-                }, function (err, cursor) {
-                    cursor.count(function (err, count) {
-                        if (count !== 0) {
-                            //console.log(count + " players matching playerId");
-                            loadGameFromDatabase(item.request.query.gameId, function (game) {
-                                item.response.send(JSON.parse(game.toJSONString()));
-                                removeFromWaiting(item);
+                    collection.find({
+                        gameId: gameId,
+                        playerId: item.request.cookies.playerId,
+                        current: false
+                    }, function (err, cursor) {
+                        cursor.count(function (err, count) {
+                            if (count !== 0) {
+                                //console.log(count + " players matching playerId");
+                                loadGameFromDatabase(item.request.query.gameId, function (game) {
+                                    item.response.send(JSON.parse(game.toJSONString()));
+                                    removeFromWaiting(item);
 
-                                collection.update({
-                                    gameId: gameId,
-                                    playerId: item.request.cookies.playerId,
-                                    current: false
-                                }, {
-                                    $set: {
-                                        current: true
-                                    }
+                                    collection.update({
+                                        gameId: gameId,
+                                        playerId: item.request.cookies.playerId,
+                                        current: false
+                                    }, {
+                                        $set: {
+                                            current: true
+                                        }
+                                    });
+                                    console.log(item.request.cookies.playerId + " has been updated.");
                                 });
-                                console.log(item.request.cookies.playerId + " has been updated.");
-                            });
-                        }
+                            }
+                        });
                     });
                 });
             };
         })(waiting[i]));
     }
-
 }, 100);
 
 app.listen(process.env.PORT || 8000);
