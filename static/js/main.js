@@ -453,8 +453,16 @@ function Display(boardElement, turnElement, turnCountElement) {
         }
     };
 
-    this.updateTurnDisplay = function (displayText) {
-        $(this.playerTurnDisplayElement).html(displayText);
+    this.updateTurnDisplay = function (whiteMove) {
+        var color;
+        if (whiteMove) {
+            color = "White";
+        }
+        else {
+            color = "Black";
+        }
+
+        $(this.playerTurnDisplayElement).html(color + "'s Move");
     };
 
     this.updateTurnCountDisplay = function (count) {
@@ -576,13 +584,7 @@ function Game(display, sound, doneCallback) {
             game.display.update();
             game.sound.playSounds();
             game.display.updateTurnCountDisplay(game.turnCount);
-
-            if (game.whiteMove) {
-                game.display.updateTurnDisplay("White's Move");
-            }
-            else {
-                game.display.updateTurnDisplay("Black's Move");
-            }
+            game.display.updateTurnDisplay(game.whiteMove);
         };
 
         update(this);
