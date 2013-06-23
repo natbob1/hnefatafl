@@ -3,7 +3,6 @@
 //TODO: Write a Network class to factor all AJAX out of Game
 //TODO: Replace jQueryUI with other modals
 //TODO: Add ability to specify what color you want in a new game
-//TODO: Join game should allow people to join games of which they were already a part
 //TODO: Make graphics into a sprite-map
 //TODO: Add a sound effects queue to Game to allow network games to get effects from the server
 //TODO: Add indicator for Game.color

@@ -76,34 +76,57 @@ app.get('/api/joinGame.json', function (request, response) {
             var gameId = new mongodb.ObjectID(request.query.gameId);
 
             collection.find({
-                gameId: gameId
+                gameId: gameId,
+                playerId: request.cookies.playerId
             }, function (err, cursor) {
                 cursor.count(function (err, count) {
-                    if (count !== 1) {
-                        response.send({
-                            color: null
+                    if (count == 1) {
+                        collection.update({
+                            gameId: gameId,
+                            playerId: request.cookies.playerId
+                        }, {
+                            $set: {
+                                current: false
+                            }
+                        });
+                        cursor.nextObject(function (err, document) {
+                            response.send({
+                                code: request.query.gameId,
+                                color: document.color
+                            });
                         });
                     }
                     else {
-                        cursor.nextObject(function (err, document) {
-                            var color = null;
-                            if (document.color === "white") {
-                                color = "black";
-                            }
-                            else if (document.color === "black") {
-                                color = "white";
-                            }
-                            collection.insert({
-                                gameId: gameId,
-                                color: color,
-                                playerId: request.cookies.playerId,
-                                current: false
-                            });
+                        collection.find({
+                            gameId: gameId
+                        }, function (err, cursor) {
+                            cursor.count(function (err, count) {
+                                if (count !== 1) {
+                                    response.send(404);
+                                }
+                                else {
+                                    cursor.nextObject(function (err, document) {
+                                        var color = null;
+                                        if (document.color === "white") {
+                                            color = "black";
+                                        }
+                                        else if (document.color === "black") {
+                                            color = "white";
+                                        }
+                                        collection.insert({
+                                            gameId: gameId,
+                                            color: color,
+                                            playerId: request.cookies.playerId,
+                                            current: false
+                                        });
 
-                            response.send({
-                                code: request.query.gameId,
-                                color: color
-                            })
+                                        response.send({
+                                            code: request.query.gameId,
+                                            color: color
+                                        })
+                                    });
+                                }
+                            });
                         });
                     }
                 });
