@@ -509,7 +509,6 @@ function Game(display, sound, doneCallback) {
 
     this.sound = sound;
     this.done = doneCallback;
-    this.soundQueue = [];
 
     this.performLocalProcessing = true;
     this.isClient = true;
@@ -595,18 +594,12 @@ function Game(display, sound, doneCallback) {
             })
             .done((function (game) {
                 return function(data) {
-                    console.log("Callback:");
-                    console.log(data);
                     game.fromJSONString(JSON.stringify(data));
-                    console.log("Setting Callback");
                     setTimeout.call(game, game.updateView, 100);
                 }
             })(this))
             .error((function (game) {
                 return function(data) {
-                    console.log("Callback:");
-                    console.log(data);
-                    console.log("Setting Callback");
                     setTimeout.call(game, game.updateView, 100);
                 }
             })(this));
