@@ -507,13 +507,15 @@ function Game(display, sound, doneCallback) {
     }
 
     this.sound = sound;
-    this.done = doneCallback;
+    this.doneCallback = doneCallback;
 
     this.performLocalProcessing = true;
     this.isClient = true;
     this.color = null;
     this.gameId = null;
+    this.updateTimer = null;
 
+    this.done = false;
     this.winner = null;
     this.whiteMove = true;
     this.turnCount = 1;
@@ -522,17 +524,15 @@ function Game(display, sound, doneCallback) {
         if (this.board.checkForTakenPieces().length > 0) {
             this.board.removePieces(this.board.checkForTakenPieces());
 
-            if (this.isClient) {
+            if (this.performLocalProcessing) {
                 this.sound.queue.push("pieceTaken");
             }
         }
 
         if (this.board.checkForVictory()) {
-            this.winner = this.board.checkForVictory();
-
-            if (this.isClient) {
+            if (this.performLocalProcessing) {
                 this.sound.queue.push("victory");
-                this.done(this);
+                this.winner = this.board.checkForVictory();
             }
         }
     };
@@ -578,28 +578,28 @@ function Game(display, sound, doneCallback) {
     };
 
     this.updateView = function () {
-        var update = function (game) {
-            game.display.update();
-            game.sound.playSounds();
-            game.display.updateTurnCountDisplay(game.turnCount);
-            game.display.updateTurnDisplay(game.whiteMove);
-        };
+        this.display.update();
+        this.sound.playSounds();
+        this.display.updateTurnCountDisplay(this.turnCount);
+        this.display.updateTurnDisplay(this.whiteMove);
+        if (this.winner && !this.done) {
+            this.doneCallback(this);
+            this.done = true;
+        }
 
-        update(this);
-
-        if (!this.performLocalProcessing) {
+        if (!this.performLocalProcessing && !this.winner) {
             $.getJSON("/api/getGame.json", {
                 gameId: this.gameId
             })
             .done((function (game) {
                 return function(data) {
                     game.fromJSONString(JSON.stringify(data));
-                    setTimeout.call(game, game.updateView, 100);
+                    game.updateTimer = setTimeout.call(game, game.updateView, 100);
                 }
             })(this))
             .error((function (game) {
                 return function(data) {
-                    setTimeout.call(game, game.updateView, 100);
+                    game.updateTimer = setTimeout.call(game, game.updateView, 100);
                 }
             })(this));
         }
@@ -608,12 +608,16 @@ function Game(display, sound, doneCallback) {
     this.setHotSeat = function () {
         this.color = null;
         this.gameId = null;
+        this.winner = null;
+        this.done = false;
         this.performLocalProcessing = true;
     };
 
     this.setNetwork = function (color, gameId) {
         this.color = color;
         this.gameId = gameId;
+        this.winner = null;
+        this.done = false;
         this.performLocalProcessing = false;
     };
 
@@ -621,7 +625,9 @@ function Game(display, sound, doneCallback) {
         return JSON.stringify({
             whiteMove: this.whiteMove,
             turnCount: this.turnCount,
-            pieces: this.board.pieces
+            winner: this.winner,
+            pieces: this.board.pieces,
+            soundQueue: this.sound.queue
         });
     };
 
@@ -630,6 +636,8 @@ function Game(display, sound, doneCallback) {
 
         this.whiteMove = gameJSON.whiteMove;
         this.turnCount = gameJSON.turnCount;
+        this.winner = gameJSON.winner;
+        this.sound.queue = gameJSON.soundQueue;
 
         this.board.pieces = [];
         for (var i = 0; i < gameJSON.pieces.length; i++) {
@@ -647,5 +655,6 @@ module.exports = {
     Move: Move,
     Point: Point,
     Board: Board,
+    Sound: Sound,
     Game: Game
 };

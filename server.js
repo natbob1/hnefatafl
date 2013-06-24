@@ -17,7 +17,7 @@ function removeFromWaiting (item) {
 }
 
 function loadGameFromDatabase(gameId, callback) {
-    var game = new hnefatafl.Game(null, null, null);
+    var game = new hnefatafl.Game(null, new hnefatafl.Sound(), null);
     game.isClient = false;
 
     connect(function (client){
@@ -36,7 +36,7 @@ app.use(express.static(__dirname + "/static"));
 
 app.get('/api/newGame.json', function (request, response) {
     var gameId = new mongodb.ObjectID();
-    var game = new hnefatafl.Game(null, null, null);
+    var game = new hnefatafl.Game(null, new hnefatafl.Sound(), null);
 
     if (request.query.color !== "white" && request.query.color !== "black") {
         response.send(500);
@@ -148,6 +148,7 @@ app.get('/api/postMove.json', function (request, response) {
                 var move = hnefatafl.Move.fromJSONString(request.query.move);
 
                 if (game.executeMove(move)) { //TODO: examine whether executeMove allows bad moves through
+                    game.sound.queue = []; // Clear the sound queue before calling Game.tick() as it will never be cleared server-side via Sound.playSounds()
                     game.tick();
 
                     collection.update({

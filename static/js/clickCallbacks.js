@@ -2,6 +2,10 @@ function setupClickCallbacks() {
     mainGame.display.clickedPiece = null;
 
     $("#board").find("div").on("click", function () {
+        if (mainGame.done) {
+            return false;
+        }
+
         if (!mainGame.display.clickedPiece) {
             mainGame.display.clickedPiece = mainGame.board.pieceAtPoint(mainGame.display.pointAtElement(this));
 
