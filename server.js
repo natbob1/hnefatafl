@@ -5,6 +5,8 @@ var connect = require('./connect');
 
 var waiting = [];
 
+console.log("Starting Server.");
+
 function removeFromWaiting (item) {
     var i;
     for (i = 0; i < waiting.length; i++) {
@@ -17,7 +19,7 @@ function removeFromWaiting (item) {
 }
 
 function loadGameFromDatabase(gameId, callback) {
-    var game = new hnefatafl.Game(null, new hnefatafl.Sound(), null);
+    var game = new hnefatafl.Game(null, new hnefatafl.Sound(null, null), null);
     game.isClient = false;
 
     connect(function (client){
@@ -36,7 +38,7 @@ app.use(express.static(__dirname + "/static"));
 
 app.get('/api/newGame.json', function (request, response) {
     var gameId = new mongodb.ObjectID();
-    var game = new hnefatafl.Game(null, new hnefatafl.Sound(), null);
+    var game = new hnefatafl.Game(null, new hnefatafl.Sound(null, null), null);
 
     if (request.query.color !== "white" && request.query.color !== "black") {
         response.send(500);
@@ -173,6 +175,7 @@ app.get('/api/postMove.json', function (request, response) {
                         success: true
                     });
                 } else {
+                    console.warn(item.request.cookies.playerId + ": Invalid move received.");
                     response.send({
                         success: false
                     });
@@ -196,6 +199,7 @@ app.get('/api/getGame.json', function (request, response) {
 });
 
 app.get('*', function (request, response) {
+    console.warn(request.cookies.playerId + ": Invalid URL accessed.");
     response.send(404);
 });
 
@@ -224,7 +228,6 @@ setInterval(function () {
                     }, function (err, cursor) {
                         cursor.count(function (err, count) {
                             if (count !== 0) {
-                                //console.log(count + " players matching playerId");
                                 loadGameFromDatabase(item.request.query.gameId, function (game) {
                                     item.response.send(JSON.parse(game.toJSONString()));
                                     removeFromWaiting(item);
