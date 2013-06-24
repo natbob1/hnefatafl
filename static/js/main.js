@@ -4,7 +4,6 @@
 //TODO: Replace jQueryUI with other modals
 //TODO: Add ability to specify what color you want in a new game
 //TODO: Make graphics into a sprite-map
-//TODO: Add a sound effects queue to Game to allow network games to get effects from the server
 //TODO: Add indicator for Game.color
 
 
@@ -407,9 +406,12 @@ function Display(boardElement, turnElement, turnCountElement) {
             }
         }
 
+        console.log(possibleIns);
+        console.log(possibleOuts);
+
         for (i = 0; i < pieceOuts.length; i++) {
             (function (elem) {
-                $(elem).fadeOut(400, function () {
+                $(elem).stop(true).fadeOut(400, function () {
                     $(elem).removeClass("white black queen");
                     $(elem).show();
                 });
@@ -418,10 +420,8 @@ function Display(boardElement, turnElement, turnCountElement) {
 
         for (i = 0; i < pieceIns.length; i++) {
             (function (elem, _class) {
-                $(elem).hide();
-
+                $(elem).stop(true).hide();
                 $(elem).addClass(_class);
-
                 $(elem).fadeIn(400);
             })(this.elementAtPoint(pieceIns[i]), this.classForPiece(this.board.pieceAtPoint(pieceIns[i])));
         }
@@ -439,7 +439,7 @@ function Display(boardElement, turnElement, turnCountElement) {
 
         for (i = 0; i < possibleIns.length; i++) {
             (function (elem) {
-                $(elem).hide();
+                $(elem).stop(true).hide();
                 $(elem).addClass("possibleMove");
                 $(elem).fadeIn(200);
             })(this.elementAtPoint(possibleIns[i]));
