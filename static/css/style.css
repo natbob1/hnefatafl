@@ -5,7 +5,7 @@
 }
 
 body {
-    background: url('img/mochaGrunge.png');
+    background: #878787 url('img/mochaGrunge.png');
 
     font-family: 'Tauri', Verdana, sans-serif;
 
@@ -78,7 +78,7 @@ h1 {
     height: 650px;
     border: 1px solid black;
     margin: 0 auto;
-    background: url('img/board_graphics.png');
+    background: #642A04 url('img/board_graphics.png');
 }
 
 #board > div {
