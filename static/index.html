@@ -4,7 +4,6 @@
     <title>Hnefatafl</title>
     <!-- External Javascript -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
     <script type="text/javascript" src="js/libs/intro.min.js"></script>
     <script type="text/javascript" src="js/libs/jquery.simplemodal.1.4.4.min.js"></script>
 
@@ -12,8 +11,6 @@
     <link href='https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic'
           rel='stylesheet' type='text/css'/>
     <link href='https://fonts.googleapis.com/css?family=Tauri' rel='stylesheet' type='text/css'>
-    <link href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/redmond/jquery-ui.css'
-          rel='stylesheet' type='text/css'/>
     <link href="css/libs/introjs.css" rel="stylesheet" type="text/css"/>
 
     <!-- Internal Javascript -->
@@ -75,17 +72,19 @@
     </div>
 </div>
 <div class="hidden dialog" id="joinNetworkGame">
-    <h2><label for="gameCode">Enter game code:</label></h2>
+    <h2><label for="joinCode">Enter game code:</label></h2>
 
     <div class="buttons">
         <input id="joinCode" type="text"/>
         <a id="joinNetworkButton" class="splashClose">Join Game</a>
     </div>
 </div>
-<div id="done-dialog" class="ui-dialog" title="Game Over!">
+<div class="dialog hidden" id="gameDone">
+    <h2>Game Over!</h2>
     <p id="winText"></p>
 </div>
-<div id="invalid-dialog" class="ui-dialog" title="Oops.">
+<div class="dialog hidden" id="invalidMove">
+    <h2>Oops.</h2>
     <p id="invalid-message"></p>
 </div>
 

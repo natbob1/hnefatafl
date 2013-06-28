@@ -147,6 +147,26 @@ h1 {
     width: 600px;
 }
 
+#gameDone {
+    width: 400px;
+}
+#gameDone p {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+#invalidMove {
+    width: 400px;
+}
+#invalidMove p {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
 /* SimpleModal Styles */
 #simplemodal-overlay {
     background-color: #000;

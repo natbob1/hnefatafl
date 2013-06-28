@@ -36,7 +36,7 @@ function newGameDialog() {
 function networkGameCodeDialog() {
     $("#gameCode").val(mainGame.gameId);
 
-    $("#networkGameCode > input").click(function () {
+    $("#networkGameCode input").click(function () {
         $(this).select();
     });
 
@@ -79,36 +79,38 @@ function joinNetworkGameDialog() {
 
 function doneDialog(game) {
     $("#winText").html("Winner is the " + game.winner + " player!");
-    $("#done-dialog").dialog({
-        modal: true,
-        dialogClass: "no-close",
-        draggable: false,
-        resizable: false,
-        show: "fadeIn",
-        hide: "fadeOut",
-        buttons: [
-            {text: "New Game", click: function () {
-                $(this).dialog("close");
-                newGameDialog();
-            }}
-        ]
+
+    $("#gameDone").modal({
+        onOpen: function (dialog) {
+            dialog.overlay.fadeIn(400);
+            dialog.container.fadeIn(400);
+            dialog.data.fadeIn(400);
+        },
+        onClose: function (dialog) {
+            dialog.overlay.fadeOut(400);
+            dialog.container.fadeOut(400);
+            dialog.data.fadeOut(400, function () {
+                $.modal.close();
+            });
+        }
     });
 }
 
 function invalidMoveDialog(message) {
     $("#invalid-message").html(message);
 
-    $("#invalid-dialog").dialog({
-        modal: true,
-        dialogClass: "no-close",
-        draggable: false,
-        resizable: false,
-        show: "fadeIn",
-        hide: "fadeOut",
-        buttons: [
-            {text: "Okay", click: function () {
-                $(this).dialog("close");
-            }}
-        ]
+    $("#invalidMove").modal({
+        onOpen: function (dialog) {
+            dialog.overlay.fadeIn(400);
+            dialog.container.fadeIn(400);
+            dialog.data.fadeIn(400);
+        },
+        onClose: function (dialog) {
+            dialog.overlay.fadeOut(400);
+            dialog.container.fadeOut(400);
+            dialog.data.fadeOut(400, function () {
+                $.modal.close();
+            });
+        }
     });
 }
