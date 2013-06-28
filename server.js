@@ -20,7 +20,6 @@ function removeFromWaiting (item) {
 
 function loadGameFromDatabase(gameId, callback) {
     var game = new hnefatafl.Game(null, new hnefatafl.Sound(null, null), null);
-    game.isClient = false;
 
     connect(function (client){
         client.collection('games', function (err, collection) {

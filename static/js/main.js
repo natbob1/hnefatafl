@@ -1,10 +1,9 @@
 //TODO: Write Unit Tests for Board, Game?, & Display?
 //TODO: Change .toJSONString methods to work directly with JSON (not strings)
 //TODO: Write a Network class to factor all AJAX out of Game
-//TODO: Replace jQueryUI with other modals
 //TODO: Add ability to specify what color you want in a new game
-//TODO: Make graphics into a sprite-map
 //TODO: Add indicator for Game.color
+//TODO: Change postMove and createGame to be POST requests
 
 
 function Piece(id, color, isQueen, location) {
@@ -510,7 +509,6 @@ function Game(display, sound, doneCallback) {
     this.doneCallback = doneCallback;
 
     this.performLocalProcessing = true;
-    this.isClient = true;
     this.color = null;
     this.gameId = null;
     this.updateTimer = null;
@@ -649,7 +647,7 @@ function Game(display, sound, doneCallback) {
 }
 
 
-var module = module || {};
+var module = module || {}; // Fix for running in non Node environment in which module exports are not needed
 module.exports = {
     Piece: Piece,
     Move: Move,
