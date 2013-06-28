@@ -35,7 +35,7 @@ function initialGameSetup() {
         doneDialog
     );
 
-    setupClickCallbacks();
+    setupGameClickCallback();
     setupIntro();
 }
 

@@ -1,4 +1,4 @@
-function setupClickCallbacks() {
+function setupGameClickCallback() {
     mainGame.display.clickedPiece = null;
 
     $("#board").find("div").on("click", function () {
@@ -8,6 +8,11 @@ function setupClickCallbacks() {
 
         if (!mainGame.display.clickedPiece) {
             mainGame.display.clickedPiece = mainGame.board.pieceAtPoint(mainGame.display.pointAtElement(this));
+
+            if (!mainGame.display.clickedPiece) {
+                mainGame.display.clickedPiece = null;
+                return false;
+            }
 
             if (!mainGame.performLocalProcessing) {
                 if (mainGame.display.clickedPiece.color !== mainGame.color) { //You clicked on the other player's piece
