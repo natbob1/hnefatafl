@@ -41,6 +41,7 @@ app.get('/api/newGame.json', function (request, response) {
 
     if (request.query.color !== "white" && request.query.color !== "black") {
         response.send(500);
+        return;
     }
 
     response.send({
@@ -70,6 +71,7 @@ app.get('/api/newGame.json', function (request, response) {
 app.get('/api/joinGame.json', function (request, response) {
     if (!request.query.gameId) {
         response.send(500);
+        return;
     }
 
     connect(function(client) {
@@ -81,13 +83,13 @@ app.get('/api/joinGame.json', function (request, response) {
                 playerId: request.cookies.playerId
             }, function (err, cursor) {
                 cursor.count(function (err, count) {
-                    if (count == 1) {
+                    if (count === 1) { // Player is already in the game (they are re-joining)
                         collection.update({
                             gameId: gameId,
                             playerId: request.cookies.playerId
                         }, {
                             $set: {
-                                current: false
+                                current: false // Set current to false so that they will receive the initial board state
                             }
                         });
                         cursor.nextObject(function (err, document) {
@@ -102,12 +104,14 @@ app.get('/api/joinGame.json', function (request, response) {
                             gameId: gameId
                         }, function (err, cursor) {
                             cursor.count(function (err, count) {
-                                if (count !== 1) {
-                                    response.send(404);
+                                if (count < 1) { // The game doesn't exist
+                                    response.send(500);
+                                    return;
                                 }
-                                else {
+                                else if (count === 1) { // The player will join as the second player in the game
                                     cursor.nextObject(function (err, document) {
                                         var color = null;
+
                                         if (document.color === "white") {
                                             color = "black";
                                         }
@@ -127,6 +131,19 @@ app.get('/api/joinGame.json', function (request, response) {
                                         })
                                     });
                                 }
+                                else { // There are already two players in the game and will join as an observer
+                                    collection.insert({
+                                        gameId: gameId,
+                                        color: null,
+                                        playerId: request.cookies.playerId,
+                                        current: false
+                                    });
+
+                                    response.send({
+                                        code: request.query.gameId,
+                                        color: null
+                                    });
+                                }
                             });
                         });
                     }
@@ -138,47 +155,74 @@ app.get('/api/joinGame.json', function (request, response) {
 
 app.get('/api/postMove.json', function (request, response) {
     if (!request.query.gameId || !request.query.move) {
+        console.warn(request.cookies.playerId + ": Invalid parameters received to postMove");
         response.send(500);
+        return;
     }
 
     connect(function(client){
         //TODO: Check whether the playerId ref in gamePlayers matches move.piece.color
+        var move = hnefatafl.Move.fromJSONString(request.query.move);
 
-        client.collection('games', function (err, collection) {
-            loadGameFromDatabase(request.query.gameId, function (game) {
-                var move = hnefatafl.Move.fromJSONString(request.query.move);
-
-                if (game.executeMove(move)) { //TODO: examine whether executeMove allows bad moves through
-                    game.sound.queue = []; // Clear the sound queue before calling Game.tick() as it will never be cleared server-side via Sound.playSounds()
-                    game.tick();
-
-                    collection.update({
-                        _id: new mongodb.ObjectID(request.query.gameId)
-                    }, {
-                        game: JSON.parse(game.toJSONString())
-                    });
-
-                    client.collection('gamePlayers', function (error, playerCollection) {
-                        playerCollection.update({
-                            gameId: new mongodb.ObjectID(request.query.gameId)
-                        }, {
-                            $set: {
-                                current: false
+        client.collection('gamePlayers', function(err, collection) {
+            collection.find({
+                playerId: request.cookies.playerId,
+                gameId: new mongodb.ObjectID(request.query.gameId)
+            }, function (err, cursor) {
+                cursor.count(function (err, count) {
+                    if (count !== 1) { // Player isn't a part of the game
+                        console.warn(request.cookies.playerId + ": Player tried to post a move in a game of which he/she was not a part.");
+                        response.send(500);
+                        return;
+                    }
+                    else {
+                        cursor.nextObject(function (err, document) {
+                            if (document.color !== move.color) { //Check whether the player's move is for their own piece
+                                console.warn(request.cookies.playerId + " attempted an to move another player's piece.");
+                                response.send(500);
+                                return;
                             }
-                        }, {
-                            multi: true
-                        });
-                    });
+                            else {
+                                client.collection('games', function (err, collection) {
+                                    loadGameFromDatabase(request.query.gameId, function (game) {
+                                        if (game.executeMove(move)) { //TODO: examine whether executeMove allows bad moves through
+                                            game.sound.queue = []; // Clear the sound queue before calling Game.tick() as it will never be cleared server-side via Sound.playSounds()
+                                            game.tick();
 
-                    response.send({
-                        success: true
-                    });
-                } else {
-                    console.warn(item.request.cookies.playerId + ": Invalid move received.");
-                    response.send({
-                        success: false
-                    });
-                }
+                                            collection.update({
+                                                _id: new mongodb.ObjectID(request.query.gameId)
+                                            }, {
+                                                game: JSON.parse(game.toJSONString())
+                                            });
+
+                                            client.collection('gamePlayers', function (error, playerCollection) {
+                                                playerCollection.update({
+                                                    gameId: new mongodb.ObjectID(request.query.gameId)
+                                                }, {
+                                                    $set: {
+                                                        current: false
+                                                    }
+                                                }, {
+                                                    multi: true
+                                                });
+                                            });
+
+                                            response.send({
+                                                success: true
+                                            });
+                                        }
+                                        else {
+                                            console.warn(request.cookies.playerId + ": Invalid move received.");
+                                            response.send({
+                                                success: false
+                                            });
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    }
+                });
             });
         });
     });
@@ -187,6 +231,7 @@ app.get('/api/postMove.json', function (request, response) {
 app.get('/api/getGame.json', function (request, response) {
     if (!request.query.gameId) {
         response.send(500);
+        return;
     }
 
     waiting.push({
