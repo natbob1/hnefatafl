@@ -556,7 +556,10 @@ function Game(display, sound, doneCallback) {
             for (var i = 0; i < this.board.pieces.length; i++) {
                 this.board.pieces[i].lastMovedPiece = false;
             }
-            var pieceOnBoard = this.board.pieceWithId(move.piece.id); //TODO: Assumes the user hasn't tampered with the id (network game)
+            var pieceOnBoard = this.board.pieceWithId(move.piece.id);
+            if (!_.isEqual(move.piece, pieceOnBoard)) {
+                return false;
+            }
 
             pieceOnBoard.location = move.endLocation;
 
