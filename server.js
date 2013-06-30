@@ -1,5 +1,6 @@
 var express = require('express');
 var mongodb = require('mongodb');
+var _ = require('underscore');
 var hnefatafl = require('./static/js/main');
 var connect = require('./connect');
 
@@ -174,7 +175,7 @@ app.get('/api/postMove.json', function (request, response) {
                     }
                     else {
                         cursor.nextObject(function (err, document) {
-                            if (document.color !== move.color) { //Check whether the player's move is for their own piece
+                            if (document.color !== move.piece.color) { //Check whether the player's move is for their own piece
                                 console.warn(request.cookies.playerId + " attempted an to move another player's piece.");
                                 response.send(500);
                             }

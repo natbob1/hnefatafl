@@ -34,10 +34,12 @@
     </div>
     <div class="buttons">
         <a id="newGameButton">New Game</a>
+        <a id="joinGameButton">Join Game</a>
+        <a id="getCodeButton" class="hidden">Show Code</a>
         <span id="playerTurn"></span>
         <span id="turnCount"></span>
     </div>
-    <div id="credits">Coding &amp; Design: Nathan Nieman <span class="divider">|</span> Graphics: Kent Trehearne</div>
+    <div id="credits">Coding &amp; Design: Nathan Nieman <span style="font-size: 125%;">|</span> Graphics: Kent Trehearne</div>
 </div>
 
 <!-- Dialogs -->
@@ -59,10 +61,6 @@
         <a class="splashClose" id="hotSeatGame">Hot Seat Game</a>
         <a class="splashClose" id="networkGame">Network Game</a>
     </div>
-    <div class="buttons">
-        <a class="splashClose" id="joinGameButton">Join Network Game</a>
-        <a class="splashClose" id="getCodeButton">Get Current Code</a>
-    </div>
 </div>
 <div class="hidden dialog" id="networkGameCode">
     <h2><label for="gameCode">Game code:</label></h2>
@@ -80,11 +78,11 @@
         <a id="joinNetworkButton" class="splashClose">Join Game</a>
     </div>
 </div>
-<div class="dialog hidden" id="gameDone">
+<div class="dialog hidden stdAlertDialog" id="gameDone">
     <h2>Game Over!</h2>
     <p id="winText"></p>
 </div>
-<div class="dialog hidden" id="invalidMove">
+<div class="dialog hidden stdAlertDialog" id="invalidMove">
     <h2>Oops.</h2>
     <p id="invalid-message"></p>
 </div>
@@ -110,7 +108,7 @@
     var mainGame;
 
     $(document).ready(function () {
-        mainGame = initialGameSetup();
+        initialGameSetup();
         mainGame.updateView();
 
         var intro = introJs();

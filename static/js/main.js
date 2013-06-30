@@ -5,6 +5,9 @@
 //TODO: Add indicator for Game.color
 //TODO: Change postMove and createGame to be POST requests
 
+if (typeof exports !== 'undefined' && this.exports !== exports) {
+    var _ = require('underscore');
+}
 
 function Piece(id, color, isQueen, location) {
     this.id = id;
@@ -306,10 +309,12 @@ function Board() {
 }
 
 
-function Display(boardElement, turnElement, turnCountElement) {
+function Display(boardElement, turnElement, turnCountElement, joinGameButton, showCodeButton) {
     this.boardElement = boardElement;
     this.playerTurnDisplayElement = turnElement;
     this.turnCountDisplayElement = turnCountElement;
+    this.joinGameButton = joinGameButton;
+    this.showCodeButton = showCodeButton;
 
     this.board = null;
     this.clickedPiece = null;
@@ -464,6 +469,17 @@ function Display(boardElement, turnElement, turnCountElement) {
         $(this.turnCountDisplayElement).html("Turn #" + count);
     };
 
+    this.updateButtons = function (isNetwork) {
+        if (isNetwork) {
+            $(this.showCodeButton).show();
+            $(this.joinGameButton).hide();
+        }
+        else {
+            $(this.showCodeButton).hide();
+            $(this.joinGameButton).show();
+        }
+    };
+
     this.setup();
 }
 
@@ -580,6 +596,7 @@ function Game(display, sound, doneCallback) {
         this.sound.playSounds();
         this.display.updateTurnCountDisplay(this.turnCount);
         this.display.updateTurnDisplay(this.whiteMove);
+        this.display.updateButtons(this.gameId);
         if (this.winner && !this.done) {
             this.doneCallback(this);
             this.done = true;
