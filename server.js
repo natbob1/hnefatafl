@@ -106,7 +106,6 @@ app.get('/api/joinGame.json', function (request, response) {
                             cursor.count(function (err, count) {
                                 if (count < 1) { // The game doesn't exist
                                     response.send(500);
-                                    return;
                                 }
                                 else if (count === 1) { // The player will join as the second player in the game
                                     cursor.nextObject(function (err, document) {
@@ -173,14 +172,12 @@ app.get('/api/postMove.json', function (request, response) {
                     if (count !== 1) { // Player isn't a part of the game
                         console.warn(request.cookies.playerId + ": Player tried to post a move in a game of which he/she was not a part.");
                         response.send(500);
-                        return;
                     }
                     else {
                         cursor.nextObject(function (err, document) {
                             if (document.color !== move.color) { //Check whether the player's move is for their own piece
                                 console.warn(request.cookies.playerId + " attempted an to move another player's piece.");
                                 response.send(500);
-                                return;
                             }
                             else {
                                 client.collection('games', function (err, collection) {
@@ -243,7 +240,7 @@ app.get('/api/getGame.json', function (request, response) {
 });
 
 app.get('*', function (request, response) {
-    console.warn(request.cookies.playerId + ": Invalid URL accessed.");
+    console.warn(request.cookies.playerId + ": Invalid URL -- " + request.url);
     response.send(404);
 });
 

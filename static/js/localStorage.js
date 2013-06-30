@@ -29,7 +29,7 @@ function initialGameSetup() {
         document.cookie = "playerId=" + new Date().getTime().toString(32) + Math.random().toString(32) + ";expires=Fri, 31 Dec 9999 23:59:59 GMT";
     }
 
-    mainGame = new Game(
+    var game = new Game(
         new Display($("#board")[0], $("#playerTurn")[0], $("#turnCount")[0]),
         new Sound($("#victoryEffect")[0], $("#takenEffect")[0]),
         doneDialog
@@ -37,6 +37,8 @@ function initialGameSetup() {
 
     setupGameClickCallback();
     setupIntro();
+
+    return game;
 }
 
 function newHotSeatGame() {

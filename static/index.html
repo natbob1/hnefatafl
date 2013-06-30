@@ -107,8 +107,10 @@
 <!-- Initialization -->
 
 <script>
+    var mainGame;
+
     $(document).ready(function () {
-        initialGameSetup();
+        mainGame = initialGameSetup();
         mainGame.updateView();
 
         var intro = introJs();
