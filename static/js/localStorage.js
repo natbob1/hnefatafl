@@ -62,7 +62,9 @@ function joinNetworkGame(gameId) {
     $.getJSON("/api/joinGame.json", {
         gameId: gameId
     }).done(function (data) {
-            mainGame.setNetwork(data.color, data.code);
-            mainGame.updateView();
+        mainGame.setNetwork(data.color, data.code);
+        mainGame.updateView();
+    }).fail(function () {
+        setTimeout(joinFailDialog, 450);
     });
 }

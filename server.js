@@ -75,9 +75,16 @@ app.get('/api/joinGame.json', function (request, response) {
         return;
     }
 
+    try {
+        var gameId = new mongodb.ObjectID(request.query.gameId);
+    }
+    catch (err) {
+        response.send(500);
+        return;
+    }
+
     connect(function(client) {
         client.collection('gamePlayers', function (err, collection) {
-            var gameId = new mongodb.ObjectID(request.query.gameId);
 
             collection.find({
                 gameId: gameId,
