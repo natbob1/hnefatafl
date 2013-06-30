@@ -405,9 +405,6 @@ function Display(boardElement, turnElement, turnCountElement) {
             }
         }
 
-        console.log(possibleIns);
-        console.log(possibleOuts);
-
         for (i = 0; i < pieceOuts.length; i++) {
             (function (elem) {
                 $(elem).stop(true).fadeOut(400, function () {
