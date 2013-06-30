@@ -36,13 +36,13 @@ app.use(express.cookieParser());
 app.use(express.static(__dirname + "/static"));
 
 app.get('/api/newGame.json', function (request, response) {
-    var gameId = new mongodb.ObjectID();
-    var game = new hnefatafl.Game(null, new hnefatafl.Sound(null, null), null);
-
     if (request.query.color !== "white" && request.query.color !== "black") {
         response.send(500);
         return;
     }
+
+    var gameId = new mongodb.ObjectID();
+    var game = new hnefatafl.Game(null, new hnefatafl.Sound(null, null), null);
 
     response.send({
         code: gameId,
@@ -160,7 +160,6 @@ app.get('/api/postMove.json', function (request, response) {
     }
 
     connect(function(client){
-        //TODO: Check whether the playerId ref in gamePlayers matches move.piece.color
         var move = hnefatafl.Move.fromJSONString(request.query.move);
 
         client.collection('gamePlayers', function(err, collection) {
