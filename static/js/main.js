@@ -5,16 +5,19 @@
 //TODO: Add indicator for Game.color
 //TODO: Change postMove and createGame to be POST requests
 
-if (typeof exports !== 'undefined' && this.exports !== exports) {
-    var _ = require('underscore');
-}
-
 function Piece(id, color, isQueen, location) {
     this.id = id;
     this.color = color;
     this.isQueen = isQueen;
     this.location = location;
     this.lastMovedPiece = false;
+
+    this.isEqual = function(otherPiece) {
+        return (this.id === otherPiece.id &&
+                this.color === otherPiece.color &&
+                this.isQueen === otherPiece.isQueen &&
+                this.location.isEqual(otherPiece.location));
+    }
 }
 
 
@@ -480,6 +483,15 @@ function Display(boardElement, turnElement, turnCountElement, joinGameButton, sh
         }
     };
 
+    this.updateIsMyTurnIndicator = function (isMyTurn) {
+        if (isMyTurn) {
+            $(this.boardElement).addClass("glow");
+        }
+        else {
+            $(this.boardElement).removeClass("glow");
+        }
+    };
+
     this.setup();
 }
 
@@ -531,6 +543,36 @@ function Game(display, sound, doneCallback) {
     this.whiteMove = true;
     this.turnCount = 1;
 
+    this.updateView = function () {
+        this.display.update();
+        this.sound.playSounds();
+        this.display.updateTurnCountDisplay(this.turnCount);
+        this.display.updateTurnDisplay(this.whiteMove);
+        this.display.updateButtons(this.gameId);
+        this.display.updateIsMyTurnIndicator(this.isMyTurn());
+        if (this.winner && !this.done) {
+            this.doneCallback(this);
+            this.done = true;
+        }
+
+        if (!this.performLocalProcessing && !this.winner) {
+            $.getJSON("/api/getGame.json", {
+                gameId: this.gameId
+            })
+            .done((function (game) {
+                return function(data) {
+                    game.fromJSONString(JSON.stringify(data));
+                    game.updateTimer = setTimeout.call(game, game.updateView, 100);
+                }
+            })(this))
+            .error((function (game) {
+                return function(data) {
+                    game.updateTimer = setTimeout.call(game, game.updateView, 100);
+                }
+            })(this));
+        }
+    };
+
     this.tick = function () {
         if (this.board.checkForTakenPieces().length > 0) {
             this.board.removePieces(this.board.checkForTakenPieces());
@@ -570,7 +612,7 @@ function Game(display, sound, doneCallback) {
                 this.board.pieces[i].lastMovedPiece = false;
             }
             var pieceOnBoard = this.board.pieceWithId(move.piece.id);
-            if (!_.isEqual(move.piece, pieceOnBoard)) {
+            if (!move.piece.isEqual(pieceOnBoard)) {
                 return false;
             }
 
@@ -591,33 +633,8 @@ function Game(display, sound, doneCallback) {
         return true;
     };
 
-    this.updateView = function () {
-        this.display.update();
-        this.sound.playSounds();
-        this.display.updateTurnCountDisplay(this.turnCount);
-        this.display.updateTurnDisplay(this.whiteMove);
-        this.display.updateButtons(this.gameId);
-        if (this.winner && !this.done) {
-            this.doneCallback(this);
-            this.done = true;
-        }
-
-        if (!this.performLocalProcessing && !this.winner) {
-            $.getJSON("/api/getGame.json", {
-                gameId: this.gameId
-            })
-            .done((function (game) {
-                return function(data) {
-                    game.fromJSONString(JSON.stringify(data));
-                    game.updateTimer = setTimeout.call(game, game.updateView, 100);
-                }
-            })(this))
-            .error((function (game) {
-                return function(data) {
-                    game.updateTimer = setTimeout.call(game, game.updateView, 100);
-                }
-            })(this));
-        }
+    this.isMyTurn = function() {
+        return this.whiteMove === (this.color === "white");
     };
 
     this.setHotSeat = function () {
