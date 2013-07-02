@@ -634,7 +634,7 @@ function Game(display, sound, doneCallback) {
     };
 
     this.isMyTurn = function() {
-        return this.whiteMove === (this.color === "white");
+        return (this.color !== null) && ( this.whiteMove === (this.color === "white") );
     };
 
     this.setHotSeat = function () {
