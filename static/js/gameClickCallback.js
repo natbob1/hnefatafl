@@ -15,6 +15,13 @@ function setupGameClickCallback() {
             }
 
             if (!mainGame.performLocalProcessing) {
+                if (mainGame.color === null) {
+                    mainGame.display.clickedPiece = null;
+
+                    invalidMoveDialog("You're just watching!");
+                    return false;
+                }
+
                 if (mainGame.display.clickedPiece.color !== mainGame.color) { //You clicked on the other player's piece
                     mainGame.display.clickedPiece = null;
 
