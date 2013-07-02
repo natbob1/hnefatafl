@@ -472,8 +472,8 @@ function Display(boardElement, turnElement, turnCountElement, joinGameButton, sh
         $(this.turnCountDisplayElement).html("Turn #" + count);
     };
 
-    this.updateButtons = function (isNetwork) {
-        if (isNetwork) {
+    this.updateButtons = function (isNetwork, done) {
+        if (isNetwork && !done) {
             $(this.showCodeButton).show();
             $(this.joinGameButton).hide();
         }
@@ -544,16 +544,17 @@ function Game(display, sound, doneCallback) {
     this.turnCount = 1;
 
     this.updateView = function () {
-        this.display.update();
-        this.sound.playSounds();
-        this.display.updateTurnCountDisplay(this.turnCount);
-        this.display.updateTurnDisplay(this.whiteMove);
-        this.display.updateButtons(this.gameId);
-        this.display.updateIsMyTurnIndicator(this.isMyTurn());
         if (this.winner && !this.done) {
             this.doneCallback(this);
             this.done = true;
         }
+
+        this.display.update();
+        this.sound.playSounds();
+        this.display.updateTurnCountDisplay(this.turnCount);
+        this.display.updateTurnDisplay(this.whiteMove);
+        this.display.updateButtons(this.gameId, this.done);
+        this.display.updateIsMyTurnIndicator(this.isMyTurn());
 
         if (!this.performLocalProcessing && !this.winner) {
             $.getJSON("/api/getGame.json", {
