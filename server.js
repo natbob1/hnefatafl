@@ -38,7 +38,7 @@ app.use(express.static(__dirname + "/static"));
 
 app.get('/api/newGame.json', function (request, response) {
     if (request.query.color !== "white" && request.query.color !== "black") {
-        response.send(500);
+        response.send(400);
         return;
     }
 
@@ -71,7 +71,7 @@ app.get('/api/newGame.json', function (request, response) {
 
 app.get('/api/joinGame.json', function (request, response) {
     if (!request.query.gameId) {
-        response.send(500);
+        response.send(400);
         return;
     }
 
@@ -79,7 +79,7 @@ app.get('/api/joinGame.json', function (request, response) {
         var gameId = new mongodb.ObjectID(request.query.gameId);
     }
     catch (err) {
-        response.send(500);
+        response.send(400);
         return;
     }
 
@@ -113,7 +113,7 @@ app.get('/api/joinGame.json', function (request, response) {
                         }, function (err, cursor) {
                             cursor.count(function (err, count) {
                                 if (count < 1) { // The game doesn't exist
-                                    response.send(500);
+                                    response.send(400);
                                 }
                                 else if (count === 1) { // The player will join as the second player in the game
                                     cursor.nextObject(function (err, document) {
@@ -163,7 +163,7 @@ app.get('/api/joinGame.json', function (request, response) {
 app.get('/api/postMove.json', function (request, response) {
     if (!request.query.gameId || !request.query.move) {
         console.warn(request.cookies.playerId + ": Invalid parameters received to postMove");
-        response.send(500);
+        response.send(400);
         return;
     }
 
@@ -178,13 +178,13 @@ app.get('/api/postMove.json', function (request, response) {
                 cursor.count(function (err, count) {
                     if (count !== 1) { // Player isn't a part of the game
                         console.warn(request.cookies.playerId + ": Player tried to post a move in a game of which he/she was not a part.");
-                        response.send(500);
+                        response.send(400);
                     }
                     else {
                         cursor.nextObject(function (err, document) {
                             if (document.color !== move.piece.color) { //Check whether the player's move is for their own piece
                                 console.warn(request.cookies.playerId + " attempted an to move another player's piece.");
-                                response.send(500);
+                                response.send(400);
                             }
                             else {
                                 client.collection('games', function (err, collection) {
@@ -211,15 +211,11 @@ app.get('/api/postMove.json', function (request, response) {
                                                 });
                                             });
 
-                                            response.send({
-                                                success: true
-                                            });
+                                            response.send(200);
                                         }
                                         else {
                                             console.warn(request.cookies.playerId + ": Invalid move received.");
-                                            response.send({
-                                                success: false
-                                            });
+                                            response.send(400);
                                         }
                                     });
                                 });
@@ -234,7 +230,15 @@ app.get('/api/postMove.json', function (request, response) {
 
 app.get('/api/getGame.json', function (request, response) {
     if (!request.query.gameId) {
-        response.send(500);
+        response.send(400);
+        return;
+    }
+
+    try {
+        new mongodb.ObjectID(request.query.gameId);
+    }
+    catch (err) {
+        response.send(400);
         return;
     }
 
@@ -258,8 +262,8 @@ setInterval(function () {
     for (i = waiting.length - 1; i >= 0; i--) {
         if (waiting[i].time < expiration) {
             console.log(waiting[i].request.cookies.playerId +  " has timed out.");
-            waiting[i].response.writeHead(200, {"Content-Type": "text/plain"});
-            waiting[i].response.end("");
+            waiting[i].response.send(200);
+            waiting[i].response.end();
             removeFromWaiting(waiting[i]);
             break;
         }
