@@ -38,6 +38,7 @@ app.use(express.static(__dirname + "/static"));
 
 app.get('/api/newGame.json', function (request, response) {
     if (request.query.color !== "white" && request.query.color !== "black") {
+        console.warn(request.cookies.playerId + ": Invalid parameters received in newGame");
         response.send(400);
         return;
     }
@@ -71,6 +72,7 @@ app.get('/api/newGame.json', function (request, response) {
 
 app.get('/api/joinGame.json', function (request, response) {
     if (!request.query.gameId) {
+        console.warn(request.cookies.playerId + ": Invalid parameters received in joinGame");
         response.send(400);
         return;
     }
@@ -79,6 +81,7 @@ app.get('/api/joinGame.json', function (request, response) {
         var gameId = new mongodb.ObjectID(request.query.gameId);
     }
     catch (err) {
+        console.warn(request.cookies.playerId + ": Invalid gameId received in joinGame");
         response.send(400);
         return;
     }
@@ -162,7 +165,7 @@ app.get('/api/joinGame.json', function (request, response) {
 
 app.get('/api/postMove.json', function (request, response) {
     if (!request.query.gameId || !request.query.move) {
-        console.warn(request.cookies.playerId + ": Invalid parameters received to postMove");
+        console.warn(request.cookies.playerId + ": Invalid parameters received in postMove");
         response.send(400);
         return;
     }
@@ -230,6 +233,7 @@ app.get('/api/postMove.json', function (request, response) {
 
 app.get('/api/getGame.json', function (request, response) {
     if (!request.query.gameId) {
+        console.warn(request.cookies.playerId + ": Invalid parameters received in getGame");
         response.send(400);
         return;
     }
@@ -238,6 +242,7 @@ app.get('/api/getGame.json', function (request, response) {
         new mongodb.ObjectID(request.query.gameId);
     }
     catch (err) {
+        console.warn(request.cookies.playerId + ": Invalid gameId received in postMove");
         response.send(400);
         return;
     }
