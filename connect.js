@@ -7,7 +7,8 @@ module.exports = function(callback) {
         callback(connection);
     }
     else {
-        mongodb.connect(process.env.MONGOLAB_URI || "mongodb://localhost:27017/hnefatafl?w=0", function(error, databaseCon) {
+        var url = process.env.MONGOLAB_URI || "mongodb://localhost:27017/hnefatafl";
+        mongodb.connect(url + "?w=1", function(error, databaseCon) {
             connection = databaseCon;
             callback(connection);
         });
