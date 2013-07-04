@@ -3,10 +3,11 @@ var mongodb = require('mongodb');
 var _ = require('underscore');
 var hnefatafl = require('./static/js/main');
 var connect = require('./connect');
+var logger = require('./logger');
 
 var waiting = [];
 
-console.log("Starting Server.");
+logger.info("Starting Server.");
 
 function removeFromWaiting (item) {
     var i;
@@ -38,7 +39,7 @@ app.use(express.static(__dirname + "/static"));
 
 app.get('/api/newGame.json', function (request, response) {
     if (request.query.color !== "white" && request.query.color !== "black") {
-        console.warn(request.cookies.playerId + ": Invalid parameters received in newGame");
+        logger.warn(request.cookies.playerId + ": Invalid parameters received in newGame");
         response.send(400);
         return;
     }
@@ -72,7 +73,7 @@ app.get('/api/newGame.json', function (request, response) {
 
 app.get('/api/joinGame.json', function (request, response) {
     if (!request.query.gameId) {
-        console.warn(request.cookies.playerId + ": Invalid parameters received in joinGame");
+        logger.warn(request.cookies.playerId + ": Invalid parameters received in joinGame");
         response.send(400);
         return;
     }
@@ -81,7 +82,7 @@ app.get('/api/joinGame.json', function (request, response) {
         var gameId = new mongodb.ObjectID(request.query.gameId);
     }
     catch (err) {
-        console.warn(request.cookies.playerId + ": Invalid gameId received in joinGame");
+        logger.warn(request.cookies.playerId + ": Invalid gameId received in joinGame");
         response.send(400);
         return;
     }
@@ -165,7 +166,7 @@ app.get('/api/joinGame.json', function (request, response) {
 
 app.get('/api/postMove.json', function (request, response) {
     if (!request.query.gameId || !request.query.move) {
-        console.warn(request.cookies.playerId + ": Invalid parameters received in postMove");
+        logger.warn(request.cookies.playerId + ": Invalid parameters received in postMove");
         response.send(400);
         return;
     }
@@ -180,13 +181,13 @@ app.get('/api/postMove.json', function (request, response) {
             }, function (err, cursor) {
                 cursor.count(function (err, count) {
                     if (count !== 1) { // Player isn't a part of the game
-                        console.warn(request.cookies.playerId + ": Player tried to post a move in a game of which he/she was not a part.");
+                        logger.warn(request.cookies.playerId + ": Player tried to post a move in a game of which he/she was not a part.");
                         response.send(400);
                     }
                     else {
                         cursor.nextObject(function (err, document) {
                             if (document.color !== move.piece.color) { //Check whether the player's move is for their own piece
-                                console.warn(request.cookies.playerId + " attempted an to move another player's piece.");
+                                logger.warn(request.cookies.playerId + " attempted an to move another player's piece.");
                                 response.send(400);
                             }
                             else {
@@ -217,7 +218,7 @@ app.get('/api/postMove.json', function (request, response) {
                                             response.send(200);
                                         }
                                         else {
-                                            console.warn(request.cookies.playerId + ": Invalid move received.");
+                                            logger.warn(request.cookies.playerId + ": Invalid move received.");
                                             response.send(400);
                                         }
                                     });
@@ -233,7 +234,7 @@ app.get('/api/postMove.json', function (request, response) {
 
 app.get('/api/getGame.json', function (request, response) {
     if (!request.query.gameId) {
-        console.warn(request.cookies.playerId + ": Invalid parameters received in getGame");
+        logger.warn(request.cookies.playerId + ": Invalid parameters received in getGame");
         response.send(400);
         return;
     }
@@ -242,7 +243,7 @@ app.get('/api/getGame.json', function (request, response) {
         new mongodb.ObjectID(request.query.gameId);
     }
     catch (err) {
-        console.warn(request.cookies.playerId + ": Invalid gameId received in postMove");
+        logger.warn(request.cookies.playerId + ": Invalid gameId received in postMove");
         response.send(400);
         return;
     }
@@ -252,11 +253,11 @@ app.get('/api/getGame.json', function (request, response) {
         response: response,
         time: new Date().getTime()
     });
-    console.log(request.cookies.playerId +  " added to queue.");
+    logger.info(request.cookies.playerId +  " added to queue.");
 });
 
 app.get('*', function (request, response) {
-    console.warn(request.cookies.playerId + ": Invalid URL -- " + request.url);
+    logger.warn(request.cookies.playerId + ": Invalid URL -- " + request.url);
     response.send(404);
 });
 
@@ -266,7 +267,7 @@ setInterval(function () {
 
     for (i = waiting.length - 1; i >= 0; i--) {
         if (waiting[i].time < expiration) {
-            console.log(waiting[i].request.cookies.playerId +  " has timed out.");
+            logger.info(waiting[i].request.cookies.playerId +  " has timed out.");
             waiting[i].response.send(200);
             waiting[i].response.end();
             removeFromWaiting(waiting[i]);
@@ -298,7 +299,7 @@ setInterval(function () {
                                             current: true
                                         }
                                     });
-                                    console.log(item.request.cookies.playerId + " has been updated.");
+                                    logger.info(item.request.cookies.playerId + " has been updated.");
                                 });
                             }
                         });
