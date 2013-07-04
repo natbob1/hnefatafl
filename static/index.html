@@ -138,12 +138,8 @@
         $("#networkGame").click(function () {
             setTimeout(newNetworkGame, 450);
         });
-        $("#joinGameButton").click(function () {
-            setTimeout(joinNetworkGameDialog, 450);
-        });
-        $("#getCodeButton").click(function () {
-            setTimeout(networkGameCodeDialog, 450);
-        });
+        $("#joinGameButton").click(joinNetworkGameDialog);
+        $("#getCodeButton").click(networkGameCodeDialog);
 
         $(".splashClose").click(function () {
             $.modal.close();

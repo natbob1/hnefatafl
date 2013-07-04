@@ -483,8 +483,8 @@ function Display(boardElement, turnElement, turnCountElement, joinGameButton, sh
         }
     };
 
-    this.updateIsMyTurnIndicator = function (isMyTurn) {
-        if (isMyTurn) {
+    this.updateIsMyTurnIndicator = function (isMyTurn, done) {
+        if (isMyTurn && !done) {
             $(this.boardElement).addClass("glow");
         }
         else {
@@ -554,7 +554,7 @@ function Game(display, sound, doneCallback) {
         this.display.updateTurnCountDisplay(this.turnCount);
         this.display.updateTurnDisplay(this.whiteMove);
         this.display.updateButtons(this.gameId, this.done);
-        this.display.updateIsMyTurnIndicator(this.isMyTurn());
+        this.display.updateIsMyTurnIndicator(this.isMyTurn(), this.done);
 
         if (!this.performLocalProcessing && !this.winner) {
             $.getJSON("/api/getGame.json", {
