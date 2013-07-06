@@ -61,6 +61,14 @@
         <a class="splashClose" id="networkGame">Network Game</a>
     </div>
 </div>
+<div class="hidden dialog" id="gameColor">
+    <h2>Select a color:</h2>
+
+    <div class="buttons">
+        <a class="splashClose" id="whiteColor">White</a>
+        <a class="splashClose" id="blackColor">Black</a>
+    </div>
+</div>
 <div class="hidden dialog" id="networkGameCode">
     <h2><label for="gameCode">Game code:</label></h2>
 
@@ -134,12 +142,19 @@
         });
 
         $("#newGameButton").click(newGameDialog);
-        $("#hotSeatGame").click(newHotSeatGame);
-        $("#networkGame").click(function () {
-            setTimeout(newNetworkGame, 450);
-        });
+            $("#hotSeatGame").click(newHotSeatGame);
+            $("#networkGame").click(function () {
+                setTimeout(chooseNetworkColorDialog, 450);
+            });
+                $("#whiteColor").click(function () {
+                    setTimeout(newNetworkGame, 450, "white");
+                });
+                $("#blackColor").click(function () {
+                    setTimeout(newNetworkGame, 450, "black");
+                });
+                    $("#getCodeButton").click(networkGameCodeDialog);
+
         $("#joinGameButton").click(joinNetworkGameDialog);
-        $("#getCodeButton").click(networkGameCodeDialog);
 
         $(".splashClose").click(function () {
             $.modal.close();

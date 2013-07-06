@@ -51,11 +51,11 @@ function newHotSeatGame() {
     mainGame.updateView();
 }
 
-function newNetworkGame() {
+function newNetworkGame(color) {
     $.getJSON("/api/newGame.json", {
-        color: "white"
+        color: color
     }).done(function (data) {
-            mainGame.setNetwork("white", data.code);
+            mainGame.setNetwork(color, data.code);
             mainGame.updateView();
             networkGameCodeDialog();
     });

@@ -156,6 +156,10 @@ h1 {
     width: 700px;
 }
 
+#gameColor {
+    width: 500px;
+}
+
 #networkGameCode {
     width: 500px;
 }
