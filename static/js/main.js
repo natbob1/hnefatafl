@@ -1,9 +1,6 @@
-//TODO: Write Unit Tests for Board, Game?, & Display?
-//TODO: Change .toJSONString methods to work directly with JSON (not strings)
-//TODO: Write a Network class to factor all AJAX out of Game
-//TODO: Add ability to specify what color you want in a new game
-//TODO: Add indicator for Game.color
 //TODO: Change postMove and createGame to be POST requests
+//TODO: Write Unit Tests for Board, Game?, & Display?
+//TODO: Write a Network class to factor all AJAX out of Game
 
 function Piece(id, color, isQueen, location) {
     this.id = id;
@@ -25,14 +22,12 @@ function Move(piece, endLocation) {
     this.piece = piece;
     this.endLocation = endLocation;
 
-    this.toJSONString = function () {
-        return JSON.stringify(this);
+    this.toJSON = function () {
+        return this;
     };
 }
 
-Move.fromJSONString = function (moveJSONString) {
-    var moveJSON = JSON.parse(moveJSONString);
-
+Move.fromJSON = function (moveJSON) {
     var piece = new Piece(moveJSON.piece.id, moveJSON.piece.color, moveJSON.piece.isQueen, new Point(moveJSON.piece.location.x, moveJSON.piece.location.y));
     var endLocation = new Point(moveJSON.endLocation.x, moveJSON.endLocation.y);
 
@@ -562,7 +557,7 @@ function Game(display, sound, doneCallback) {
             })
             .done((function (game) {
                 return function(data) {
-                    game.fromJSONString(JSON.stringify(data));
+                    game.fromJSON(data);
                     game.updateTimer = setTimeout.call(game, game.updateView, 100);
                 }
             })(this))
@@ -627,7 +622,7 @@ function Game(display, sound, doneCallback) {
         } else {
             $.getJSON("/api/postMove.json", {
                 gameId: this.gameId,
-                move: move.toJSONString()
+                move: JSON.stringify(move.toJSON())
             });
         }
 
@@ -654,19 +649,17 @@ function Game(display, sound, doneCallback) {
         this.performLocalProcessing = false;
     };
 
-    this.toJSONString = function () {
-        return JSON.stringify({
+    this.toJSON = function () {
+        return {
             whiteMove: this.whiteMove,
             turnCount: this.turnCount,
             winner: this.winner,
             pieces: this.board.pieces,
             soundQueue: this.sound.queue
-        });
+        };
     };
 
-    this.fromJSONString = function (gameJSONString) {
-        var gameJSON = JSON.parse(gameJSONString);
-
+    this.fromJSON = function (gameJSON) {
         this.whiteMove = gameJSON.whiteMove;
         this.turnCount = gameJSON.turnCount;
         this.winner = gameJSON.winner;

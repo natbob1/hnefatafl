@@ -10,7 +10,7 @@ function saveGame(game) {
         return false;
     }
 
-    localStorage['Hnefatafl'] = game.toJSONString();
+    localStorage['Hnefatafl'] = JSON.stringify(game.toJSON());
 
     return true;
 }
@@ -20,7 +20,7 @@ function loadGame(game) {
         return false;
     }
 
-    game.fromJSONString(localStorage['Hnefatafl']);
+    game.fromJSON(JSON.parse(localStorage['Hnefatafl']));
     return true;
 }
 

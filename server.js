@@ -26,7 +26,7 @@ function loadGameFromDatabase(gameId, callback) {
     connect(function (client){
         client.collection('games', function (err, collection) {
             collection.findOne({_id: new mongodb.ObjectID(gameId)}, function (err, doc) {
-                game.fromJSONString(JSON.stringify(doc.game));
+                game.fromJSON(doc.game);
                 callback(game);
             });
         });
@@ -56,7 +56,7 @@ app.get('/api/newGame.json', function (request, response) {
         client.collection('games', function (err, collection) {
             collection.insert({
                 _id: gameId,
-                game: JSON.parse(game.toJSONString())
+                game: game.toJSON()
             });
         });
 
@@ -172,7 +172,7 @@ app.get('/api/postMove.json', function (request, response) {
     }
 
     connect(function(client){
-        var move = hnefatafl.Move.fromJSONString(request.query.move);
+        var move = hnefatafl.Move.fromJSON(JSON.parse(request.query.move));
 
         client.collection('gamePlayers', function(err, collection) {
             collection.find({
@@ -200,7 +200,7 @@ app.get('/api/postMove.json', function (request, response) {
                                             collection.update({
                                                 _id: new mongodb.ObjectID(request.query.gameId)
                                             }, {
-                                                game: JSON.parse(game.toJSONString())
+                                                game: game.toJSON()
                                             });
 
                                             client.collection('gamePlayers', function (error, playerCollection) {
@@ -287,7 +287,7 @@ setInterval(function () {
                         cursor.count(function (err, count) {
                             if (count !== 0) {
                                 loadGameFromDatabase(item.request.query.gameId, function (game) {
-                                    item.response.send(JSON.parse(game.toJSONString()));
+                                    item.response.send(game.toJSON());
                                     removeFromWaiting(item);
 
                                     collection.update({
