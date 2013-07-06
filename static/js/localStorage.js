@@ -38,7 +38,6 @@ function initialGameSetup() {
         }
     );
 
-    setupGameClickCallback();
     setupIntro();
 }
 

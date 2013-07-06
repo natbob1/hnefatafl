@@ -202,7 +202,10 @@ h1 {
 }
 
 .introjs-tooltiptext {
-    font-family: 'Tauri', Verdana, sans-serif;
+    font-family: Georgia, sans-serif;
+    font-size: 12pt;
+    text-align: justify;
+    line-height: 16pt;
 }
 
 .introjs-helperLayer {

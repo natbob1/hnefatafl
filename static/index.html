@@ -131,6 +131,7 @@
         function introCallback() {
             loadGame(mainGame);
             mainGame.updateView();
+            setupGameClickCallback();
         }
 
         intro.onexit(introCallback);

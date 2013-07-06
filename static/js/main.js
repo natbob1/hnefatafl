@@ -1,6 +1,7 @@
 //TODO: Change postMove and createGame to be POST requests
 //TODO: Write Unit Tests for Board, Game?, & Display?
 //TODO: Write a Network class to factor all AJAX out of Game
+//TODO: Fix behavior for "double traps"
 
 function Piece(id, color, isQueen, location) {
     this.id = id;
