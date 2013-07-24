@@ -99,7 +99,7 @@ h1 {
     height: 650px;
     border: 1px solid black;
     margin: 0 auto;
-    background: #642A04 url('img/board_graphics.png');
+    background: #642A04 url('img/board_graphics.jpg');
 }
     #board > div {
         width: 50px;
