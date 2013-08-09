@@ -45,7 +45,7 @@
 }
 
 body {
-    background: #878787 url('img/mochaGrunge.png');
+    background: #878787 url('img/binding_dark.png');
 
     font-family: 'Tauri', Verdana, sans-serif;
 
@@ -83,7 +83,7 @@ h1 {
 
 /* Supplemental UI styles */
 .buttons {
-    margin: 30px auto;
+    margin: 25px auto;
     text-align: center;
 }
 
@@ -99,11 +99,13 @@ h1 {
     cursor: pointer;
 }
 .buttons span {
+    color: cornsilk;
     font-size: 16pt;
     margin: 2px 10px;
 }
 
 #credits {
+    color: cornsilk;
     text-align: center;
 }
 
@@ -112,7 +114,8 @@ h1 {
 #board {
     width: 650px;
     height: 650px;
-    border: 1px solid black;
+    border: 10px solid black;
+    border-radius: 5px;
     margin: 0 auto;
     background: #642A04 url('img/board_graphics.jpg');
 }
@@ -151,6 +154,8 @@ h1 {
     font-family: Courier, monospace;
     font-size: 16pt;
     width: 350px;
+    position: relative;
+    top: -2px;
 }
 
 .stdAlertDialog {
@@ -224,5 +229,5 @@ h1 {
 }
 
 .introjs-helperLayer {
-    background: url('img/mochaGrunge.png');
+    background: url('img/binding_dark.png');
 }
