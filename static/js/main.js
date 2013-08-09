@@ -2,6 +2,7 @@
 //TODO: Write Unit Tests for Board, Game?, & Display?
 //TODO: Write a Network class to factor all AJAX out of Game
 //TODO: Fix behavior for "double traps"
+//TODO: Change out modals to new effects
 
 function Piece(id, color, isQueen, location) {
     this.id = id;
