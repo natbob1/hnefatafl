@@ -4,6 +4,7 @@
 //TODO: Fix behavior for "double traps"
 //TODO: Change out modals to new effects
 //TODO: Bugs in Firefox: multiple network calls
+//TODO: Piece move animations
 
 function Piece(id, color, isQueen, location) {
     this.id = id;
@@ -258,16 +259,15 @@ function Board() {
                         ) {
                         var op = piece.location.getOppositeAdjacentPoint(adj[i]);
 
-                        if (op === false) {
-                            continue;
-                        }
-                        else if (
-                            ( this.pieceAtPoint(op) && (this.pieceAtPoint(op).color !== piece.color) ) ||
-                                op.isCorner() ||
-                                ( (piece.color === "black") && op.isCenter() ) ||
-                                ( (piece.color === "white") && op.isCenter() && !this.pieceAtPoint(op) )
-                            ) {
-                            return true;
+                        if (op !== false) {
+                            if (
+                                ( this.pieceAtPoint(op) && (this.pieceAtPoint(op).color !== piece.color) ) ||
+                                    op.isCorner() ||
+                                    ( (piece.color === "black") && op.isCenter() ) ||
+                                    ( (piece.color === "white") && op.isCenter() && !this.pieceAtPoint(op) )
+                                ) {
+                                return true;
+                            }
                         }
                     }
 
@@ -280,7 +280,6 @@ function Board() {
                             adj[i].isCorner() ||
                             adj[i].isCenter()
                         ) {
-                        continue;
                     }
                     else {
                         return false;
@@ -534,7 +533,6 @@ function Game(display, sound, doneCallback) {
     this.performLocalProcessing = true;
     this.color = null;
     this.gameId = null;
-    this.updateTimer = null;
 
     this.done = false;
     this.winner = null;
@@ -565,7 +563,7 @@ function Game(display, sound, doneCallback) {
                 }
             })(this))
             .error((function (game) {
-                return function(data) {
+                return function() {
                     game.updateTimer = setTimeout.call(game, game.updateView, 100);
                 }
             })(this));
