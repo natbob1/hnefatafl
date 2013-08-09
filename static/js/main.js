@@ -3,6 +3,7 @@
 //TODO: Write a Network class to factor all AJAX out of Game
 //TODO: Fix behavior for "double traps"
 //TODO: Change out modals to new effects
+//TODO: Bugs in Firefox: multiple network calls
 
 function Piece(id, color, isQueen, location) {
     this.id = id;
