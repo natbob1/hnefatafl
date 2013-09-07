@@ -126,11 +126,40 @@ h1 {
         margin-bottom: 10px;
         float: left;
     }
-    #board > div.right {
+    #board > div:nth-child(11n) {
         margin-right: 0;
     }
 
 /* Board Elements */
+#board {
+    position: relative;
+}
+#board > img {
+    pointer-events: none;
+    position: absolute;
+    opacity: 1;
+    left: 0;
+    top: 0;
+}
+#board > img.slide {
+    /*-webkit-transform: translate(0px, 0px);*/
+    -webkit-transition: -webkit-transform 1s cubic-bezier(0.215, 0.610, 0.355, 1.000);
+}
+#board > img.fade {
+    -webkit-transition: opacity 1s linear;
+}
+#board > img.hide {
+    opacity: 0;
+}
+
+#board > div {
+    transition-property: opacity;
+    transition-duration: 400ms;
+    opacity: 1;
+}
+#board > div.hide {
+    opacity: 0;
+}
 #board > div.corner {
     background: url('img/corner.png');
 }

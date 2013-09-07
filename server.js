@@ -1,6 +1,5 @@
 var express = require('express');
 var mongodb = require('mongodb');
-var _ = require('underscore');
 var hnefatafl = require('./static/js/main');
 var connect = require('./connect');
 var logger = require('./logger');
@@ -10,8 +9,7 @@ var waiting = [];
 logger.info("Starting Server.");
 
 function removeFromWaiting (item) {
-    var i;
-    for (i = 0; i < waiting.length; i++) {
+    for (var i = 0; i < waiting.length; i++) {
         if (item === waiting[i]) {
             waiting.splice(i, 1);
             return true;

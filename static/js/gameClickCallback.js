@@ -1,13 +1,13 @@
 function setupGameClickCallback() {
     mainGame.display.clickedPiece = null;
 
-    $("#board").find("div").on("click", function () {
+    $("#board").on("click", "div", function () {
         if (mainGame.done) {
             return false;
         }
 
         if (!mainGame.display.clickedPiece) {
-            mainGame.display.clickedPiece = mainGame.board.pieceAtPoint(mainGame.display.pointAtElement(this));
+            mainGame.display.clickedPiece = mainGame.board.pieceAtPoint(mainGame.display.pointAtSquareElement(this));
 
             if (!mainGame.display.clickedPiece) {
                 mainGame.display.clickedPiece = null;
@@ -46,7 +46,7 @@ function setupGameClickCallback() {
             return true;
         }
         else {
-            var newLocation = mainGame.display.pointAtElement(this);
+            var newLocation = mainGame.display.pointAtSquareElement(this);
 
             if (newLocation) {
                 if (mainGame.display.clickedPiece.location.isEqual(newLocation)) { //User unclicked the piece that was currently selected

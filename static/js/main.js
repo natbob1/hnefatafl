@@ -4,7 +4,7 @@
 //TODO: Fix behavior for "double traps"
 //TODO: Change out modals to new effects
 //TODO: Bugs in Firefox: multiple network calls
-//TODO: Piece move animations
+//TODO: Fix intro.js highlight things
 
 function Piece(id, color, isQueen, location) {
     this.id = id;
@@ -320,12 +320,11 @@ function Display(boardElement, turnElement, turnCountElement, joinGameButton, sh
     this.clickedPiece = null;
 
     this.setup = function () {
-        $(this.boardElement).empty();
-
+        var boardHTML = "";
         for (var i = 0; i < 121; i++) {
-            $(this.boardElement).append($('<div></div>'));
-            $("div:nth-child(11n)", this.boardElement).addClass("right");
+            boardHTML += '<div class="hide"></div>';
         }
+        this.boardElement.innerHTML = boardHTML;
     };
 
     this.classForPiece = function (piece) {
@@ -342,12 +341,12 @@ function Display(boardElement, turnElement, turnCountElement, joinGameButton, sh
         }
     };
 
-    this.elementAtPoint = function (point) {
+    this.squareElementAtPoint = function (point) {
         var index = point.y * 11 + point.x;
         return this.boardElement.children[index];
     };
 
-    this.pointAtElement = function (element) {
+    this.pointAtSquareElement = function (element) {
         for (var i = 0; i < this.boardElement.children.length; i++) {
             if (this.boardElement.children[i] === element) {
                 return new Point(i % 11, Math.floor(i / 11));
@@ -356,19 +355,50 @@ function Display(boardElement, turnElement, turnCountElement, joinGameButton, sh
         return false;
     };
 
-    this.isPieceAtElement = function (element) {
-        return $(element).hasClass("white") || $(element).hasClass("black") || $(element).hasClass("queen");
+    this.elementForPiece = function (piece) {
+        var results = $("#board img[data-piece-id='" + piece.id + "']");
+        if (results.length === 1) {
+            return results[0];
+        }
+
+        return false;
+    };
+
+    this.pieceForElement = function (element) {
+        for(var i = 0; i < this.board.allPieces.length; i++) {
+            if (this.board.allPieces[i].id == element.getAttribute('data-piece-id')) {
+                return this.board.allPieces[i];
+            }
+        }
+
+        return false;
+    };
+
+    this.getDisplayLocationForPiece = function (piece) {
+        var elem = this.elementForPiece(piece);
+
+        var matrix = elem.style.webkitTransform.substr(10, elem.style.webkitTransform.length - 11).split(', ');
+
+        return new Point( parseInt(matrix[0]) / 60, parseInt(matrix[1]) / 60 );
+    };
+
+    this.setOffsetForPiece = function (piece, element) {
+        var xOffset = piece.location.x * 60;
+        var yOffset = piece.location.y * 60;
+        element.style.transitionDuration = '1000ms';
+        element.style.webkitTransform = "translate(" + xOffset + "px, " + yOffset + "px)";
     };
 
     this.update = function () {
         var squares = $(this.boardElement).children();
         var pieceIns = [];
-        var pieceOuts = [];
-        var pieceCrosses = [];
+        var elementOuts = [];
+        var pieceSlides = [];
         var possibleIns = [];
         var possibleOuts = [];
         var i, j;
         var allPossible;
+
 
         if (this.clickedPiece) {
             allPossible = this.board.allValidMoveLocations(this.clickedPiece);
@@ -376,80 +406,116 @@ function Display(boardElement, turnElement, turnCountElement, joinGameButton, sh
             allPossible = [];
         }
 
-
         for (i = 0; i < squares.length; i++) {
-            var pieceView = this.isPieceAtElement(squares[i]); //Represents the previous state of the board
-            var pieceModel = this.board.pieceAtPoint(this.pointAtElement(squares[i])); //Represents the new state of the board
-
-            if (pieceModel && !pieceView) { //Locations which previously were empty, but now have a piece
-                pieceIns.push(this.pointAtElement(squares[i]));
-            }
-            else if (!pieceModel && pieceView) { //Locations which previously were occupied, but now are empty
-                pieceOuts.push(this.pointAtElement(squares[i]));
-            }
-            else if (pieceModel && pieceView) { //Locations which previously were occupied, but now are occupied with a different type of pieces
-                if (!$(squares[i]).hasClass(this.classForPiece(pieceModel))) {
-                    pieceCrosses.push(this.pointAtElement(squares[i]));
-                }
-            }
-
-            var possibleView = $(squares[i]).hasClass("possibleMove");
+            var possibleView = squares[i].classList.contains("possibleMove");
             var possibleModel = false;
 
+
             for (j = 0; j < allPossible.length; j++) {
-                if (allPossible[j].isEqual(this.pointAtElement(squares[i]))) {
+                if (allPossible[j].isEqual(this.pointAtSquareElement(squares[i]))) {
                     possibleModel = true;
                 }
             }
 
             if (possibleView && !possibleModel) {
-                possibleOuts.push(this.pointAtElement(squares[i]));
+                possibleOuts.push(this.pointAtSquareElement(squares[i]));
             }
             else if (!possibleView && possibleModel) {
-                possibleIns.push(this.pointAtElement(squares[i]));
+                possibleIns.push(this.pointAtSquareElement(squares[i]));
             }
-        }
-
-        for (i = 0; i < pieceOuts.length; i++) {
-            (function (elem) {
-                $(elem).stop(true).fadeOut(400, function () {
-                    $(elem).removeClass("white black queen");
-                    $(elem).show();
-                });
-            })(this.elementAtPoint(pieceOuts[i]));
-        }
-
-        for (i = 0; i < pieceIns.length; i++) {
-            (function (elem, _class) {
-                $(elem).stop(true).hide();
-                $(elem).addClass(_class);
-                $(elem).fadeIn(400);
-            })(this.elementAtPoint(pieceIns[i]), this.classForPiece(this.board.pieceAtPoint(pieceIns[i])));
-        }
-
-        for (i = 0; i < pieceCrosses.length; i++) {
-            (function (elem, _class) {
-                $(elem).fadeOut(200, function () {
-                    $(elem).removeClass("white black queen");
-                    $(elem).addClass(_class);
-                    $(elem).fadeIn(200);
-                });
-            })(this.elementAtPoint(pieceCrosses[i]), this.classForPiece(this.board.pieceAtPoint(pieceCrosses[i])));
         }
 
 
         for (i = 0; i < possibleIns.length; i++) {
             (function (elem) {
-                $(elem).stop(true).hide();
-                $(elem).addClass("possibleMove");
-                $(elem).fadeIn(200);
-            })(this.elementAtPoint(possibleIns[i]));
+                elem.style.transitionDuration = '300ms';
+                elem.classList.add('possibleMove');
+                elem.classList.remove('hide');
+            })(this.squareElementAtPoint(possibleIns[i]));
         }
 
         for (i = 0; i < possibleOuts.length; i++) {
             (function (elem) {
-                $(elem).removeClass("possibleMove");
-            })(this.elementAtPoint(possibleOuts[i]));
+                elem.style.transitionDuration = '200ms';
+                elem.classList.add('hide');
+
+                setTimeout(function () {
+                    elem.classList.remove('possibleMove');
+                }, 50);
+
+            })(this.squareElementAtPoint(possibleOuts[i]));
+        }
+
+        var piece;
+        for (i = 0; i < this.board.pieces.length; i++) {
+            piece = this.board.pieces[i];
+
+            if ( this.board.pieces.some(function (testPiece) {
+                return testPiece.id === piece.id;
+            }) ) { // Piece should be on the board
+                if (this.elementForPiece(piece) === false) { // Piece is not yet on the board
+                    pieceIns.push(piece);
+                }
+                else if (!piece.location.isEqual(this.getDisplayLocationForPiece(piece))) { // Piece is already on the board, but needs to be moved
+                    pieceSlides.push(piece);
+                }
+            }
+        }
+
+        var imgElements = $("#board img");
+        for (i = 0; i < imgElements.length; i++) {
+            var elementValid = false;
+
+            for (j = 0; j < this.board.pieces.length; j++) {
+                if (this.board.pieces[j].id == imgElements[i].getAttribute('data-piece-id')) {
+                    elementValid = true;
+                }
+            }
+
+            if (!elementValid) {
+                elementOuts.push(imgElements[i]);
+            }
+        }
+
+        for (i = 0; i < pieceIns.length; i++) {
+            (function (display, piece) {
+                var elem = document.createElement('img');
+                elem.src = 'css/img/' + display.classForPiece(piece) + '.png';
+                elem.setAttribute('data-piece-id', piece.id);
+
+                elem.classList.add('hide');
+                elem.style.transitionDuration = '400ms';
+                elem.classList.add('fade');
+                display.setOffsetForPiece(piece, elem);
+
+                display.boardElement.appendChild(elem);
+                elem.classList.remove('hide');
+
+                setTimeout(function() { elem.classList.remove('fade'); }, 400);
+            })(this, pieceIns[i]);
+        }
+
+        for (i = 0; i < elementOuts.length; i++) {
+            (function (display, elem) {
+                elem.style.transitionDuration = '400ms';
+                elem.classList.add('fade');
+                elem.classList.add('hide');
+
+                setTimeout(function() {
+                    display.boardElement.removeChild(elem);
+                }, 400);
+            })(this, elementOuts[i]);
+        }
+
+        for (i = 0; i < pieceSlides.length; i++) {
+            (function (display, piece) {
+                display.elementForPiece(piece).classList.add('slide');
+                display.setOffsetForPiece(piece, display.elementForPiece(piece));
+
+                setTimeout(function () {
+                    display.elementForPiece(piece).classList.remove('slide');
+                }, 1000);
+            })(this, pieceSlides[i]);
         }
     };
 
@@ -462,11 +528,11 @@ function Display(boardElement, turnElement, turnCountElement, joinGameButton, sh
             color = "Black";
         }
 
-        $(this.playerTurnDisplayElement).html(color + "'s Move");
+        this.playerTurnDisplayElement.innerHTML = color + "'s Move";
     };
 
     this.updateTurnCountDisplay = function (count) {
-        $(this.turnCountDisplayElement).html("Turn #" + count);
+        this.turnCountDisplayElement.innerHTML = "Turn #" + count;
     };
 
     this.updateButtons = function (isNetwork, done) {
@@ -482,10 +548,10 @@ function Display(boardElement, turnElement, turnCountElement, joinGameButton, sh
 
     this.updateIsMyTurnIndicator = function (isMyTurn, done) {
         if (isMyTurn && !done) {
-            $(this.boardElement).addClass("glow");
+            this.boardElement.classList.add('glow');
         }
         else {
-            $(this.boardElement).removeClass("glow");
+            this.boardElement.classList.remove('glow');
         }
     };
 
