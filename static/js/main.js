@@ -4,7 +4,9 @@
 //TODO: Fix behavior for "double traps"
 //TODO: Change out modals to new effects
 //TODO: Bugs in Firefox: multiple network calls
+//TODO: Show error when creating a game fails
 //TODO: Fix intro.js highlight things
+//TODO: Fix graphics on FF
 
 function Piece(id, color, isQueen, location) {
     this.id = id;
@@ -364,16 +366,6 @@ function Display(boardElement, turnElement, turnCountElement, joinGameButton, sh
         return false;
     };
 
-    this.pieceForElement = function (element) {
-        for(var i = 0; i < this.board.allPieces.length; i++) {
-            if (this.board.allPieces[i].id == element.getAttribute('data-piece-id')) {
-                return this.board.allPieces[i];
-            }
-        }
-
-        return false;
-    };
-
     this.getDisplayLocationForPiece = function (piece) {
         var elem = this.elementForPiece(piece);
 
@@ -548,10 +540,10 @@ function Display(boardElement, turnElement, turnCountElement, joinGameButton, sh
 
     this.updateIsMyTurnIndicator = function (isMyTurn, done) {
         if (isMyTurn && !done) {
-            this.boardElement.classList.add('glow');
+            this.playerTurnDisplayElement.classList.add('glow');
         }
         else {
-            this.boardElement.classList.remove('glow');
+            this.playerTurnDisplayElement.classList.remove('glow');
         }
     };
 
@@ -559,13 +551,21 @@ function Display(boardElement, turnElement, turnCountElement, joinGameButton, sh
 }
 
 
-function Sound(victoryElement, pieceTakenElement) {
-    this.victoryElement = victoryElement;
-    this.pieceTakenElement = pieceTakenElement;
+function Sound() {
+    this.sounds = {
+        victory: 'audio/victory.ogg',
+        pieceTaken: 'audio/taken.ogg',
+        ping: 'audio/ping.ogg'
+    };
+
     this.queue = [];
 
     this.playSounds = function () {
         for (var i = 0; i < this.queue.length; i++) {
+            if (this.queue[i] === 'ping' && ( this.queue.indexOf('pieceTaken') > -1 || this.queue.indexOf('victory') > -1)) {
+                break;
+            }
+
             this.playSound(this.queue[i]);
         }
 
@@ -573,15 +573,8 @@ function Sound(victoryElement, pieceTakenElement) {
     };
 
     this.playSound = function (soundName) {
-        this[soundName]();
-    };
-
-    this.victory = function () {
-        this.victoryElement.play();
-    };
-
-    this.pieceTaken = function () {
-        this.pieceTakenElement.play();
+        var sound = new Audio(this.sounds[soundName]);
+        sound.play();
     };
 }
 
@@ -650,6 +643,10 @@ function Game(display, sound, doneCallback) {
                 this.sound.queue.push("victory");
                 this.winner = this.board.checkForVictory();
             }
+        }
+
+        if (this.performLocalProcessing) {
+            this.sound.queue.push("ping");
         }
     };
 

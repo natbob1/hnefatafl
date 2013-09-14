@@ -31,7 +31,7 @@ function initialGameSetup() {
 
     mainGame = new Game(
         new Display($("#board")[0], $("#playerTurn")[0], $("#turnCount")[0], $("#joinGameButton")[0], $("#getCodeButton")[0]),
-        new Sound($("#victoryEffect")[0], $("#takenEffect")[0]),
+        new Sound(),
         function (game) {
             localStorage.clear();
             doneDialog(game);
