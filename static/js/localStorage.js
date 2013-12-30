@@ -37,8 +37,6 @@ function initialGameSetup() {
             doneDialog(game);
         }
     );
-
-    setupIntro();
 }
 
 function newHotSeatGame() {

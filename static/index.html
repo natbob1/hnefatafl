@@ -4,7 +4,7 @@
     <title>Hnefatafl</title>
     <!-- External Javascript -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script type="text/javascript" src="js/libs/intro.min.js"></script>
+    <script type="text/javascript" src="js/libs/intro.js"></script>
     <script type="text/javascript" src="js/libs/jquery.simplemodal.1.4.4.min.js"></script>
 
     <!-- External CSS -->
@@ -118,7 +118,7 @@
         initialGameSetup();
         mainGame.updateView();
 
-        var intro = introJs();
+        var intro = setupIntro();
 
         function introCallback() {
             loadGame(mainGame);
