@@ -124,12 +124,12 @@ h1 {
     #board > div {
         width: 50px;
         height: 50px;
-        margin-right: 10px;
-        margin-bottom: 10px;
+        padding-right: 10px;
+        padding-bottom: 10px;
         float: left;
     }
     #board > div:nth-child(11n) {
-        margin-right: 0;
+        padding-right: 0;
     }
 
 /* Board Elements */
@@ -144,7 +144,6 @@ h1 {
     top: 0;
 }
 #board > img.slide {
-    /*-webkit-transform: translate(0px, 0px);*/
     -webkit-transition: -webkit-transform 1s cubic-bezier(0.215, 0.610, 0.355, 1.000);
 }
 #board > img.fade {
