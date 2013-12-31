@@ -160,18 +160,6 @@ h1 {
 #board > div.hide {
     opacity: 0;
 }
-#board > div.corner {
-    background: url('img/corner.png');
-}
-#board > div.white {
-    background: url('img/white.png');
-}
-#board > div.black {
-    background: url('img/black.png');
-}
-#board > div.queen {
-    background: url('img/queen.png');
-}
 #board > div.possibleMove {
     background: url("img/move.png");
 }
