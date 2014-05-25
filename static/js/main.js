@@ -379,6 +379,7 @@ function Display(boardElement, turnElement, turnCountElement, joinGameButton, sh
         var yOffset = piece.location.y * 60;
         element.style.transitionDuration = '1000ms';
         element.style.webkitTransform = "translate(" + xOffset + "px, " + yOffset + "px)";
+        element.style.MozTransform = "translate(" + xOffset + "px, " + yOffset + "px)";
     };
 
     this.update = function () {

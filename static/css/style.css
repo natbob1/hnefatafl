@@ -144,9 +144,11 @@ h1 {
 }
 #board > img.slide {
     -webkit-transition: -webkit-transform 1s cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    -moz-transition: -moz-transform 1s cubic-bezier(0.215, 0.610, 0.355, 1.000);
 }
 #board > img.fade {
     -webkit-transition: opacity 1s linear;
+    -moz-transition: opacity 1s linear;
 }
 #board > img.hide {
     opacity: 0;
