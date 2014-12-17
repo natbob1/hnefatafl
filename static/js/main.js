@@ -6,7 +6,6 @@
 //TODO: Bugs in Firefox: multiple network calls
 //TODO: Show error when creating a game fails
 //TODO: Fix intro.js highlight things
-//TODO: Fix graphics on FF
 
 function Piece(id, color, isQueen, location) {
     this.id = id;

@@ -269,7 +269,7 @@ setInterval(function () {
             waiting[i].response.send(200);
             waiting[i].response.end();
             removeFromWaiting(waiting[i]);
-            break;
+            break; //TODO: Should this be continue?
         }
 
         connect((function (item) {
