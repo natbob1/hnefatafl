@@ -1,3 +1,3 @@
 # Hnefatafl.js
 
-> See [my personal website](http://hnefatafl.nnieman.com) for a demo!
+> See [Heroku](https://enigmatic-mountain-2539.herokuapp.com/) for a demo!
